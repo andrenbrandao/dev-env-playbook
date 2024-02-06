@@ -1,0 +1,6 @@
+- hosts: localhost
+  become: true
+  tasks:
+    - name: Install zsh
+      ansible.builtin.apt:
+        name: zsh
