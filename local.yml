@@ -1,5 +1,9 @@
 - hosts: localhost
   become: true
+  pre_tasks:
+    - name: Update cache
+      ansible.builtin.apt:
+        update_cache: true
   tasks:
     - name: Install zsh
       ansible.builtin.apt:
