@@ -2,6 +2,6 @@
   ansible.builtin.apt:
     name: zsh
 - name: Change shell
-  ansible.builtin.shell: chsh -s `which sh`
+  ansible.builtin.shell: chsh -s `which zsh`
 - name: Install oh-my-zsh
   ansible.builtin.shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
