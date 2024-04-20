@@ -12,3 +12,8 @@
 
 - name: Install fzf
   ansible.builtin.shell: $HOME/.fzf/install
+
+- name: Install Hack Nerd font
+  ansible.builtin.shell: mkdir -p ~/.local/share/fonts && cd ~/.local/share/fonts && curl -fLO https://github.com/ryanoasis/nerd-fonts/raw/HEAD/patched-fonts/Hack/Regular/HackNerdFont-Regular.ttf
+  tags:
+    - productivity
