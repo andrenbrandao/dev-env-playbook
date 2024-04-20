@@ -15,7 +15,7 @@
   register: zshrc_stats
 
 - name: Remove .zshrc
-  shell: rm $HOME/.zshrc
+  ansible.builtin.shell: rm $HOME/.zshrc
   when: zshrc_stats.stat.exists == True
 
 - name: Stow dotfiles

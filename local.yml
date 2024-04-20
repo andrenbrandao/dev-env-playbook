@@ -6,6 +6,8 @@
         update_cache: true
   tasks:
     - ansible.builtin.include_tasks: tasks/zsh.yml
+    # needs to be after zsh to not have oh-my-zsh replace zshrc file
+    # and to be ready for tmux
+    - ansible.builtin.include_tasks: tasks/dotfiles.yml
     - ansible.builtin.include_tasks: tasks/tmux.yml
     - ansible.builtin.include_tasks: tasks/neovim.yml
-    - ansible.builtin.include_tasks: tasks/dotfiles.yml
