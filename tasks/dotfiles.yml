@@ -1,0 +1,11 @@
+- name: Install Stow
+  ansible.builtin.apt:
+    name: stow
+- name: Clone dotfiles
+  ansible.builtin.git:
+    repo: "https://github.com/andrenbrandao/dotfiles.git"
+    dest: "{{ lookup('env', 'HOME') }}/dotfiles"
+    recursive: yes
+    update: yes
+- name: Stow dotfiles
+  ansible.builtin.shell: cd $HOME/dotfiles && ./bootstrap.sh
