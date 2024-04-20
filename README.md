@@ -31,7 +31,7 @@ The first one is the base where we can simulate a new machine, while the second 
 After building the images, execute:
 
 ```bash
-docker run --rm --it nvim-computer bash
+docker run -v .:/usr/local/bin --rm --it nvim-computer bash
 ```
 
 It will spin up a new docker container. One can now test if all the programs/apps were installed correctly.
