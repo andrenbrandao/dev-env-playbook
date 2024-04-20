@@ -1,11 +1,22 @@
 - name: Install Stow
   ansible.builtin.apt:
     name: stow
+
 - name: Clone dotfiles
   ansible.builtin.git:
     repo: "https://github.com/andrenbrandao/dotfiles.git"
     dest: "{{ lookup('env', 'HOME') }}/dotfiles"
     recursive: yes
     update: yes
+
+- name: Check that the .zshrc exists
+  ansible.builtin.stat:
+    path: $HOME/.zshrc
+  register: zshrc_stats
+
+- name: Remove .zshrc
+  shell: rm $HOME/.zshrc
+  when: zshrc_stats.stat.exists == True
+
 - name: Stow dotfiles
   ansible.builtin.shell: cd $HOME/dotfiles && ./bootstrap.sh
