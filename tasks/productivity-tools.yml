@@ -1,0 +1,14 @@
+- name: Install productivity packages
+  become: true
+  ansible.builtin.apt:
+    name: ["xclip", "tldr", "ripgrep"]
+
+- name: Clone Fzf
+  ansible.builtin.git:
+    repo: "https://github.com/junegunn/fzf.git"
+    dest: "{{ lookup('env', 'HOME') }}/.fzf"
+    update: yes
+    depth: 1
+
+- name: Install fzf
+  ansible.builtin.shell: $HOME/.fzf/install

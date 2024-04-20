@@ -11,3 +11,4 @@
     - ansible.builtin.include_tasks: tasks/dotfiles.yml
     - ansible.builtin.include_tasks: tasks/tmux.yml
     - ansible.builtin.include_tasks: tasks/neovim.yml
+    - ansible.builtin.include_tasks: tasks/productivity-tools.yml
