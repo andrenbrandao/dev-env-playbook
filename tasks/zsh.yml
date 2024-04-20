@@ -35,3 +35,4 @@
     dest: "{{ lookup('env', 'HOME') }}/.oh-my-zsh/custom/themes/powerlevel10k"
     recursive: yes
     update: yes
+    depth: 1
