@@ -3,6 +3,7 @@
   ansible.builtin.apt:
     name: zsh
   tags:
+    - install
     - zsh
 
 - name: Change user shell to zsh
@@ -11,6 +12,7 @@
     name: "{{ the_user }}"
     shell: /bin/zsh
   tags:
+    - install
     - zsh
 
 - name: Download Oh My Zsh installation script
@@ -18,6 +20,7 @@
     url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
     dest: /tmp/install_ohmyzsh.sh
   tags:
+    - install
     - zsh
 
 - name: Run Oh My Zsh installation script
@@ -25,6 +28,7 @@
   register: ohmyzsh_result
   failed_when: "'FAILED' in ohmyzsh_result.stderr"
   tags:
+    - install
     - zsh
 
 - name: Install zsh-autosuggestions
@@ -34,6 +38,7 @@
     recursive: yes
     update: yes
   tags:
+    - install
     - zsh
 
 - name: Install zsh-syntax-highlighting
@@ -43,6 +48,7 @@
     recursive: yes
     update: yes
   tags:
+    - install
     - zsh
 
 - name: Add theme Powerlevel10k
@@ -53,4 +59,5 @@
     update: yes
     depth: 1
   tags:
+    - install
     - zsh

@@ -2,6 +2,9 @@
   become: true
   ansible.builtin.apt:
     name: stow
+  tags:
+    - install
+    - dotfiles
 
 - name: Clone dotfiles
   ansible.builtin.git:
@@ -9,17 +12,27 @@
     dest: "{{ lookup('env', 'HOME') }}/dotfiles"
     recursive: yes
     update: yes
+  tags:
+    - install
+    - dotfiles
 
 - name: Check that the .zshrc exists
   ansible.builtin.stat:
     path: $HOME/.zshrc
   register: zshrc_stats
+  tags:
+    - install
+    - dotfiles
 
 - name: Remove .zshrc
   ansible.builtin.shell: rm $HOME/.zshrc
   when: zshrc_stats.stat.exists == True
+  tags:
+    - install
+    - dotfiles
 
 - name: Stow dotfiles
   ansible.builtin.shell: cd $HOME/dotfiles && ./bootstrap.sh
   tags:
+    - install
     - dotfiles

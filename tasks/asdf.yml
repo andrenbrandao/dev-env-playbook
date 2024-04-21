@@ -4,6 +4,7 @@
     dest: "{{ lookup('env', 'HOME') }}/.asdf"
     version: v0.14.0
   tags:
+    - install
     - asdf
 
 # only needed for bash
@@ -15,6 +16,7 @@
       . "$HOME/.asdf/asdf.sh"
       . "$HOME/.asdf/completions/asdf.bash"
   tags:
+    - install
     - asdf
 
 - name: asdf plugin-add nodejs
@@ -22,6 +24,7 @@
   environment:
     PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
   tags:
+    - install
     - asdf
 
 - name: asdf plugin-add golang
@@ -29,6 +32,7 @@
   environment:
     PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
   tags:
+    - install
     - asdf
 
 - name: asdf install nodejs
@@ -36,6 +40,7 @@
   environment:
     PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
   tags:
+    - install
     - asdf
 
 - name: asdf install golang
@@ -43,6 +48,7 @@
   environment:
     PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
   tags:
+    - install
     - asdf
 
 - name: asdf global nodejs 20.12.2
@@ -50,6 +56,7 @@
   environment:
     PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
   tags:
+    - install
     - asdf
 
 - name: asdf global golang 1.22.2
@@ -57,4 +64,5 @@
   environment:
     PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
   tags:
+    - install
     - asdf
