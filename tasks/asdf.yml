@@ -2,16 +2,59 @@
   ansible.builtin.git:
     repo: "https://github.com/asdf-vm/asdf.git"
     dest: "{{ lookup('env', 'HOME') }}/.asdf"
-    update: yes
+    version: v0.14.0
   tags:
     - asdf
 
-- name: Install node.js
-  ansible.builtin.shell: asdf plugin add nodejs && asdf install nodejs latest:20 && asdf global nodejs $(asdf list nodejs | tail -n 1 | tr -d "*")
+# only needed for bash
+# zsh is handled by the plugin in oh-my-zsh
+- name: Configure asdf in .bashrc
+  ansible.builtin.blockinfile:
+    path: $HOME/.bashrc
+    block: |
+      . "$HOME/.asdf/asdf.sh"
+      . "$HOME/.asdf/completions/asdf.bash"
   tags:
     - asdf
 
-- name: Install go
-  ansible.builtin.shell: asdf plugin add golang && asdf install golang latest && asdf global golang $(asdf list golang | tail -n 1 | tr -d "*")
+- name: asdf plugin-add nodejs
+  ansible.builtin.command: "asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
+  tags:
+    - asdf
+
+- name: asdf plugin-add golang
+  ansible.builtin.command: "asdf plugin add golang https://github.com/asdf-community/asdf-golang.git"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
+  tags:
+    - asdf
+
+- name: asdf install nodejs
+  ansible.builtin.command: "asdf install nodejs 20.12.2"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
+  tags:
+    - asdf
+
+- name: asdf install golang
+  ansible.builtin.command: "asdf install golang 1.22.2"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
+  tags:
+    - asdf
+
+- name: asdf global nodejs 20.12.2
+  ansible.builtin.command: "asdf global nodejs 20.12.2"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
+  tags:
+    - asdf
+
+- name: asdf global golang 1.22.2
+  ansible.builtin.command: "asdf global golang 1.22.2"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
   tags:
     - asdf

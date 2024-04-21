@@ -26,7 +26,9 @@ To build the docker images used in this project, run `build-dockers.sh`. It will
 
 The first one is the base where we can simulate a new machine, while the second is the one used for development of the automation, hence the neovim installation to change the files.
 
-### Running it
+Note that `nvim.Dockerfile` adds the ppa:neovim-ppa/unstable repository. That is how it is able to install the latest neovim. For the default Dockerfile, we need to add it during Ansible, or install it from source. The decision will depend on how much we have control of installing new things in the machine.
+
+### Running it with neovim installation
 
 After building the images, execute:
 
@@ -40,4 +42,25 @@ To run the ansible command and install all the packages, execute:
 
 ```bash
 ansible-playbook local.yml
+```
+
+### Running from a clean install
+
+Build the images with:
+
+```bash
+./build-dockers.sh
+```
+
+Run the clean ubuntu installation:
+
+```bash
+docker run -v .:/usr/local/bin --rm --it new-computer bash
+```
+
+Enter the `/usr/local/bin` directory and execute ansible:
+
+```bash
+cd /usr/local/bin
+./ansible-run.sh
 ```
