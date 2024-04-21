@@ -1,7 +1,7 @@
 - name: Install productivity packages
   become: true
   ansible.builtin.apt:
-    name: ["xclip", "tldr", "ripgrep"]
+    name: ["vim", "xclip", "tldr", "ripgrep"]
 
 - name: Clone Fzf
   ansible.builtin.git:
