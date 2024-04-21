@@ -5,6 +5,7 @@
       ansible.builtin.apt:
         update_cache: true
   tasks:
+    - ansible.builtin.import_tasks: tasks/core.yml
     - ansible.builtin.import_tasks: tasks/zsh.yml
     # dotfiles needs to be after zsh to not have oh-my-zsh replace zshrc file
     # and to be ready for tmux

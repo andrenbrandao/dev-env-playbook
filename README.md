@@ -55,12 +55,12 @@ Build the images with:
 Run the clean ubuntu installation:
 
 ```bash
-docker run -v .:/usr/local/bin --rm --it new-computer bash
+docker run -v .:/home/andrebrandao/ansible --rm --it new-computer bash
 ```
 
-Enter the `/usr/local/bin` directory and execute ansible:
+Cd into the `~/ansible` directory and execute ansible:
 
 ```bash
-cd /usr/local/bin
+cd ~/ansible
 ./ansible-run.sh
 ```

@@ -1,0 +1,8 @@
+- name: Install System Packages (build-essential, cmake, gettext, etc.)
+  become: true
+  apt:
+    name: ["build-essential", "cmake", "gettext", "ninja-build"]
+  tags:
+    - install
+    - neovim
+    - core

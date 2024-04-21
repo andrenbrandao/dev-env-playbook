@@ -1,4 +1,20 @@
-- name: Install Neovim
+- name: Clone Neovim
+  ansible.builtin.git:
+    repo: "https://github.com/neovim/neovim.git"
+    dest: "/tmp/neovim"
+  tags:
+    - install
+    - neovim
+
+- name: Build neovim
+  shell: "cd /tmp/neovim && make -j 20"
+  tags:
+    - install
+    - neovim
+
+- name: Install neovim
   become: true
-  ansible.builtin.apt:
-    name: neovim
+  shell: "cd /tmp/neovim && make install"
+  tags:
+    - install
+    - neovim

@@ -21,5 +21,5 @@ USER andrebrandao
 WORKDIR /home/andrebrandao
 
 FROM andrebrandao
-COPY . /usr/local/bin
+COPY . ./ansible
 CMD ["sh", "-c", "ansible-playbook $TAGS local.yml"]
