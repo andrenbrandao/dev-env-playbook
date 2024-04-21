@@ -1,17 +1,18 @@
-# ThePrimeagen's Developer Productivity Course
+# Development Environment Setup
 
-These are my configurations and experiments done while taking the course at [Frontend Masters](https://frontendmasters.com/courses/developer-productivity/).
+These are my configurations and experiments done while taking [ThePrimeagen's Developer Productivity Course
+](https://frontendmasters.com/courses/developer-productivity/) at Frontend Masters.
 
-Some of the tips will be implemented in my [Dotfiles Repo](https://github.com/andrenbrandao/dotfiles).
+This repository contains my personal automation configuration for setting up a new system. Feel free to use any parts of it that you find useful, but please note that I provide no guarantees or warranties. Use the configurations at your own risk.
 
-Topics I have found to be most impactful:
+The ansible playbook relies mostly on my dotfiles configuration at this [Dotfiles Repo](https://github.com/andrenbrandao/dotfiles).
+
+Topics I have found to be most impactful from the course:
 
 - Ansible: automating your personal environment installation in a new machine
 - GNU Stow: dotfile management with symlinks
 - Tmux: a terminal multiplexer. I have an [article](https://andrebrandao.me/articles/terminal-setup-with-zsh-tmux-dracula-theme/#tmux--dracula-theme) on how I configure mine.
 - Fzf: a fuzzy finder
-
-The remaining of the topics were also pretty cool.
 
 ## How to do these automation experiments with Docker and Ansible
 
@@ -28,7 +29,7 @@ The first one is the base where we can simulate a new machine, while the second 
 
 Note that `nvim.Dockerfile` adds the ppa:neovim-ppa/unstable repository. That is how it is able to install the latest neovim. For the default Dockerfile, we need to add it during Ansible, or install it from source. The decision will depend on how much we have control of installing new things in the machine.
 
-### Running it with neovim installation
+### Running it with neovim already installed
 
 After building the images, execute:
 
