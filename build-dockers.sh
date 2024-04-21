@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
-docker build . -t new-computer
+docker build . -t ansible-computer
 docker build . -f nvim.Dockerfile -t nvim-computer
+docker build . -f ubuntu.Dockerfile -t ubuntu-computer

@@ -20,21 +20,28 @@ The point of using docker containers is that we can play with new instances of U
 
 ### Building
 
-To build the docker images used in this project, run `build-dockers.sh`. It will create two clean images:
+To build the docker images used in this project, run `build-dockers.sh`. It will create 3 images:
 
-- `new-computer`: a clean ubuntu installation
+- `ubuntu-computer`: a clean ubuntu installation
 - `nvim-computer`: ubuntu with neovim installed
+- `ansible-computer`: ubuntu with ansible installed
 
-The first one is the base where we can simulate a new machine, while the second is the one used for development of the automation, hence the neovim installation to change the files.
+The first one is the base where we can simulate a new machine, while the other 2 are used for development of the automation, hence the neovim and ansible installations to change the files.
 
 Note that `nvim.Dockerfile` adds the ppa:neovim-ppa/unstable repository. That is how it is able to install the latest neovim. For the default Dockerfile, we need to add it during Ansible, or install it from source. The decision will depend on how much we have control of installing new things in the machine.
 
 ### Running it with neovim already installed
 
+Build the images with:
+
+```bash
+./build-dockers.sh
+```
+
 After building the images, execute:
 
 ```bash
-docker run -v .:/usr/local/bin --rm --it nvim-computer bash
+docker run -v .:/usr/local/bin --rm -it nvim-computer bash
 ```
 
 It will spin up a new docker container. One can now test if all the programs/apps were installed correctly.
@@ -45,7 +52,7 @@ To run the ansible command and install all the packages, execute:
 ansible-playbook local.yml
 ```
 
-### Running from a clean install
+### Running from a installation with ansible, curl and git
 
 Build the images with:
 
@@ -53,10 +60,10 @@ Build the images with:
 ./build-dockers.sh
 ```
 
-Run the clean ubuntu installation:
+Run the new ubuntu installation:
 
 ```bash
-docker run -v .:/home/andrebrandao/ansible --rm --it new-computer bash
+docker run -v .:/home/andrebrandao/ansible --rm -it ansible-computer bash
 ```
 
 Cd into the `~/ansible` directory and execute ansible:
@@ -64,4 +71,26 @@ Cd into the `~/ansible` directory and execute ansible:
 ```bash
 cd ~/ansible
 ./ansible-run.sh
+```
+
+### Running from a clean ubuntu install
+
+This is the image that really simulates a clean installation, running the install.sh script.
+
+Build the images with:
+
+```bash
+./build-dockers.sh
+```
+
+Run the new ubuntu installation:
+
+```bash
+docker run -it ubuntu-computer bash
+```
+
+Curl the install.sh script and run it.
+
+```bash
+curl https://raw.githubusercontent.com/andrenbrandao/dev-env-setup/main/install.sh | sh
 ```
