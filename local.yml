@@ -1,4 +1,7 @@
 - hosts: localhost
+  become: no
+  vars:
+    the_user: "{{ ansible_user_id }}"
   pre_tasks:
     - name: Update cache
       become: true
