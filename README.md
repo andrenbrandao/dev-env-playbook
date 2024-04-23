@@ -92,5 +92,5 @@ docker run -it ubuntu-computer bash
 Curl the install.sh script and run it.
 
 ```bash
-curl https://raw.githubusercontent.com/andrenbrandao/dev-env-setup/main/install.sh | sh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-setup/main/install.sh)"
 ```
