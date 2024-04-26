@@ -2,8 +2,7 @@
 
 This repository contains my personal automation configuration for setting up a new system. Feel free to use any parts of it that you find useful, but please note that I provide no guarantees or warranties. Use the configurations at your own risk.
 
-I started this while taking [ThePrimeagen's Developer Productivity Course
-](https://frontendmasters.com/courses/developer-productivity/) at Frontend Masters.
+Inspired by [ThePrimeagen's Developer Productivity Course](https://frontendmasters.com/courses/developer-productivity/) at Frontend Masters.
 
 The ansible playbook relies mostly on my dotfiles configuration at this [Dotfiles Repo](https://github.com/andrenbrandao/dotfiles).
 
