@@ -1,4 +1,4 @@
-# Development Environment Setup
+# Development Environment Playbook
 
 This repository contains my personal automation configuration for setting up a new system. Feel free to use any parts of it that you find useful, but please note that I provide no guarantees or warranties. Use the configurations at your own risk.
 
@@ -91,5 +91,5 @@ docker run -it ubuntu-computer bash
 Curl the install.sh script and run it.
 
 ```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-setup/main/install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/install.sh)"
 ```
