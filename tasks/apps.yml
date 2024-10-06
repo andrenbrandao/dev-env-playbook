@@ -19,7 +19,7 @@
     - ubuntu
 
 - name: Restore guake prefs
-  ansible.builtin.shell: guake --restore-preferences $HOME/.config/guake/.guakeprefs
+  ansible.builtin.shell: guake --restore-preferences $HOME/.config/guake/prefs.guake
   tags:
     - install
     - apps
