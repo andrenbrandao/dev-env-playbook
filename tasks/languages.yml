@@ -29,6 +29,7 @@
     - install
     - asdf
     - languages
+    - nodejs
 
 - name: asdf plugin-add golang
   ansible.builtin.command: "asdf plugin add golang https://github.com/asdf-community/asdf-golang.git"
@@ -38,6 +39,7 @@
     - install
     - asdf
     - languages
+    - go
 
 - name: asdf install nodejs
   ansible.builtin.command: "asdf install nodejs 20.12.2"
@@ -47,6 +49,7 @@
     - install
     - asdf
     - languages
+    - nodejs
 
 - name: asdf install golang
   ansible.builtin.command: "asdf install golang 1.22.2"
@@ -56,6 +59,7 @@
     - install
     - asdf
     - languages
+    - go
 
 - name: asdf global nodejs 20.12.2
   ansible.builtin.command: "asdf global nodejs 20.12.2"
@@ -65,6 +69,7 @@
     - install
     - asdf
     - languages
+    - nodejs
 
 - name: asdf global golang 1.22.2
   ansible.builtin.command: "asdf global golang 1.22.2"
@@ -74,6 +79,7 @@
     - install
     - asdf
     - languages
+    - go
 
 - name: Download Rust and Cargo Installer
   ansible.builtin.get_url:
@@ -84,9 +90,50 @@
   tags:
     - install
     - languages
+    - rust
 
 - name: Install Rust and Cargo
   ansible.builtin.shell: /tmp/sh.rustup.rs -y
   tags:
     - install
     - languages
+    - rust
+
+
+- name: asdf plugin-add python
+  ansible.builtin.command: "asdf plugin add python https://github.com/asdf-community/asdf-python.git"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
+  tags:
+    - install
+    - asdf
+    - languages
+    - python
+
+- name: asdf install python
+  ansible.builtin.command: "asdf install python 3.12.5"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
+  tags:
+    - install
+    - asdf
+    - languages
+    - python
+
+- name: asdf global python 3.12.5
+  ansible.builtin.command: "asdf global python 3.12.5"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
+  tags:
+    - install
+    - asdf
+    - languages
+    - python
+
+- name: Install uv package manager for Python
+  ansible.builtin.shell: sh -c "$(curl -fsSL https://astral.sh/uv/install.sh)"
+  tags:
+    - install
+    - languages
+    - python
+
