@@ -137,3 +137,33 @@
     - languages
     - python
 
+
+- name: asdf plugin-add hugo
+  ansible.builtin.command: "asdf plugin add hugo https://github.com/nklmilojevic/asdf-hugo.git"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
+  tags:
+    - install
+    - asdf
+    - languages
+    - hugo
+
+- name: asdf install hugo
+  ansible.builtin.command: "asdf install hugo 0.111.3"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
+  tags:
+    - install
+    - asdf
+    - languages
+    - hugo
+
+- name: asdf global hugo 0.111.3
+  ansible.builtin.command: "asdf global hugo 0.111.3"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
+  tags:
+    - install
+    - asdf
+    - languages
+    - hugo
