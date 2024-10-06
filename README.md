@@ -13,7 +13,25 @@ Topics I have found to be most impactful from the course:
 - Tmux: a terminal multiplexer. I have an [article](https://andrebrandao.me/articles/terminal-setup-with-zsh-tmux-dracula-theme/#tmux--dracula-theme) on how I configure mine.
 - Fzf: a fuzzy finder
 
-## How to do these automation experiments with Docker and Ansible
+## Installation
+
+For a brand new Ubuntu installation, curl the install.sh script and run it.
+
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/install.sh)"
+```
+
+### Running per tags
+
+Run specific actions (e.g. install neovim) with a given tag.
+
+```bash
+ansible-playbook local.yml --tags neovim --ask-become
+```
+
+Notice the usage of `--ask-become` as the action might require the superuser password.
+
+## How to experiment with Docker and Ansible
 
 The point of using docker containers is that we can play with new instances of Ubuntu and check if the ansible scripts are working properly, simulating the situation of getting a new machine.
 
