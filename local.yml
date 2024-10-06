@@ -17,3 +17,4 @@
     - ansible.builtin.import_tasks: tasks/neovim.yml
     - ansible.builtin.import_tasks: tasks/productivity-tools.yml
     - ansible.builtin.import_tasks: tasks/asdf.yml
+    - ansible.builtin.import_tasks: tasks/apps.yml
