@@ -7,6 +7,14 @@
     - neovim
     - core
 
+- name: Install tools (htop, etc.)
+  become: true
+  apt:
+    name: ["htop"]
+  tags:
+    - install
+    - core
+
 - name: Install necessary core packages for python
   become: true
   apt:
