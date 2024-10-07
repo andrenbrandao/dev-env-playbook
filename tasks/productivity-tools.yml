@@ -1,7 +1,7 @@
 - name: Install productivity packages
   become: true
   ansible.builtin.apt:
-    name: ["vim", "xclip", "tldr", "ripgrep"]
+    name: ["vim", "xclip", "tldr", "ripgrep", "fasd"]
   tags:
     - install
     - productivity
