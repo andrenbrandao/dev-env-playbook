@@ -24,3 +24,15 @@
     - install
     - apps
     - ubuntu
+
+# https://albertlauncher.github.io/installation/
+# Ubuntu 22.04
+- name: Install Albert launcher
+  become: true
+  ansible.builtin.apt:
+    deb: https://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_22.04/amd64/albert_0.26.4-0+649.1_amd64.deb 
+  tags:
+    - install
+    - apps
+    - ubuntu
+    - albert
