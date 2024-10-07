@@ -8,7 +8,7 @@
     - neovim
 
 - name: Build neovim
-  shell: "cd /tmp/neovim && make -j 20"
+  shell: "cd /tmp/neovim && make CMAKE_BUILD_TYPE=RelWithDebInfo"
   tags:
     - install
     - neovim
