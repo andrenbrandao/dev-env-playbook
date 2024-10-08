@@ -36,3 +36,13 @@
     - apps
     - ubuntu
     - albert
+
+- name: Install Google Chrome
+  become: true
+  ansible.builtin.apt:
+    deb: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+  tags:
+    - install
+    - apps
+    - ubuntu
+    - chrome
