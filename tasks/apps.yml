@@ -46,3 +46,54 @@
     - apps
     - ubuntu
     - chrome
+
+# Install Flatpak and DejaDup for Backups.
+# https://apps.gnome.org/DejaDup/
+# Backing up Calibre library.
+- name: Install flatpak
+  become: true
+  ansible.builtin.apt:
+    name: flatpak
+  tags:
+    - install
+    - apps
+    - ubuntu
+    - dejadup
+
+- name: Add flathub repository
+  ansible.builtin.shell: flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+  tags:
+    - install
+    - apps
+    - ubuntu
+    - dejadup
+
+- name: Install DejaDup
+  ansible.builtin.shell: flatpak install flathub org.gnome.DejaDup -y
+  tags:
+    - install
+    - apps
+    - ubuntu
+    - dejadup
+
+- name: Install Calibre dependencies
+  become: true
+  ansible.builtin.apt:
+    name: libxcb-cursor0
+  tags:
+    - install
+    - apps
+    - ubuntu
+    - calibre
+
+# https://manual.calibre-ebook.com/faq.html#how-do-i-move-my-calibre-data-from-one-computer-to-another
+# After installation, simply load backup with DejaDup
+# and import the config from CalibreBackup directory.
+- name: Install Calibre
+  become: true
+  ansible.builtin.shell: wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sudo sh /dev/stdin
+  tags:
+    - install
+    - apps
+    - ubuntu
+    - calibre
