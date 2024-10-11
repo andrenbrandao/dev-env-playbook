@@ -1,7 +1,7 @@
 - name: Install System Packages (build-essential, cmake, gettext, etc.)
   become: true
   apt:
-    name: ["build-essential", "cmake", "gettext", "ninja-build"]
+    name: ["build-essential", "cmake", "gettext", "ninja-build", "dconf-cli"]
   tags:
     - install
     - neovim
