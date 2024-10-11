@@ -10,7 +10,7 @@
 - name: Install tools (htop, etc.)
   become: true
   apt:
-    name: ["htop", "unzip"]
+    name: ["htop", "unzip", "busybox"]
   tags:
     - install
     - core
