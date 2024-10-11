@@ -15,10 +15,18 @@ Topics I have found to be most impactful from the course:
 
 ## Installation
 
-For a brand new Ubuntu installation, curl the install.sh script and run it.
+There are two options of commands:
+
+1. To install all the CLIs libraries, neovim, and dotfiles config, curl the [install.sh](./install.sh) script and run it.
 
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/install.sh)"
+```
+
+2. For a brand new Ubuntu installation, curl the [ubuntu.sh](./ubuntu.sh) script. It will install other GUI apps and backups.
+
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/ubuntu.sh)"
 ```
 
 ### Running per tags
