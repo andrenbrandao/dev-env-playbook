@@ -47,35 +47,21 @@
     - ubuntu
     - chrome
 
-# Install Flatpak and DejaDup for Backups.
+# Install DejaDup for backups. Was using flatpak first,
+# but the version that comes pre-installed from apt
+# works fine.
 # https://apps.gnome.org/DejaDup/
-# Backing up Calibre library.
-- name: Install flatpak
+- name: Install DejaDup
   become: true
   ansible.builtin.apt:
-    name: flatpak
+    name: deja-dup
   tags:
     - install
     - apps
     - ubuntu
     - dejadup
 
-- name: Add flathub repository
-  ansible.builtin.shell: flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-  tags:
-    - install
-    - apps
-    - ubuntu
-    - dejadup
-
-- name: Install DejaDup
-  ansible.builtin.shell: flatpak install flathub org.gnome.DejaDup -y
-  tags:
-    - install
-    - apps
-    - ubuntu
-    - dejadup
-
+# Installing to backup Calibre library.
 - name: Install Calibre dependencies
   become: true
   ansible.builtin.apt:
