@@ -2,7 +2,7 @@
   ansible.builtin.git:
     repo: "https://github.com/neovim/neovim.git"
     dest: "/tmp/neovim"
-    version: v0.10.0
+    version: v0.10.2
   tags:
     - install
     - neovim
