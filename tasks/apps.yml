@@ -25,6 +25,27 @@
     - apps
     - ubuntu
 
+- name: Add Solaar repository
+  become: true
+  ansible.builtin.apt_repository:
+    repo: ppa:solaar-unifying/stable
+    state: present
+  tags:
+    - install
+    - apps
+    - ubuntu
+
+# Used to list Logi mouse and keyboard devices
+- name: Update repositories cache and install Solaar
+  become: true
+  ansible.builtin.apt:
+    name: solaar
+    update_cache: yes
+  tags:
+    - install
+    - apps
+    - ubuntu
+
 # https://albertlauncher.github.io/installation/
 # Ubuntu 22.04
 - name: Install Albert launcher
