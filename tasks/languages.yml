@@ -7,9 +7,8 @@
     - install
     - asdf
     - languages
+    - ubuntu
 
-# only needed for bash
-# zsh is handled by the plugin in oh-my-zsh
 - name: Configure asdf in .bashrc
   ansible.builtin.blockinfile:
     path: $HOME/.bashrc
@@ -20,6 +19,19 @@
     - install
     - asdf
     - languages
+    - ubuntu
+
+- name: Configure asdf in .zshrc
+  ansible.builtin.blockinfile:
+    path: $HOME/.zshrc
+    block: |
+      . "$HOME/.asdf/asdf.sh"
+      . "$HOME/.asdf/completions/asdf.bash"
+  tags:
+    - install
+    - asdf
+    - languages
+    - ubuntu
 
 - name: asdf plugin-add nodejs
   ansible.builtin.command: "asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git"
@@ -30,6 +42,7 @@
     - asdf
     - languages
     - nodejs
+    - ubuntu
 
 - name: asdf plugin-add golang
   ansible.builtin.command: "asdf plugin add golang https://github.com/asdf-community/asdf-golang.git"
@@ -40,6 +53,7 @@
     - asdf
     - languages
     - go
+    - ubuntu
 
 - name: asdf install nodejs
   ansible.builtin.command: "asdf install nodejs 20.12.2"
@@ -50,6 +64,7 @@
     - asdf
     - languages
     - nodejs
+    - ubuntu
 
 - name: asdf install golang
   ansible.builtin.command: "asdf install golang 1.22.2"
@@ -60,6 +75,7 @@
     - asdf
     - languages
     - go
+    - ubuntu
 
 - name: asdf global nodejs 20.12.2
   ansible.builtin.command: "asdf global nodejs 20.12.2"
@@ -80,6 +96,7 @@
     - asdf
     - languages
     - go
+    - ubuntu
 
 - name: Download Rust and Cargo Installer
   ansible.builtin.get_url:
@@ -91,6 +108,7 @@
     - install
     - languages
     - rust
+    - ubuntu
 
 - name: Install Rust and Cargo
   ansible.builtin.shell: /tmp/sh.rustup.rs -y
@@ -98,6 +116,7 @@
     - install
     - languages
     - rust
+    - ubuntu
 
 
 - name: asdf plugin-add python
@@ -109,6 +128,7 @@
     - asdf
     - languages
     - python
+    - ubuntu
 
 - name: asdf install python
   ansible.builtin.command: "asdf install python 3.12.5"
@@ -119,6 +139,7 @@
     - asdf
     - languages
     - python
+    - ubuntu
 
 - name: asdf global python 3.12.5
   ansible.builtin.command: "asdf global python 3.12.5"
@@ -129,6 +150,7 @@
     - asdf
     - languages
     - python
+    - ubuntu
 
 - name: Install uv package manager for Python
   ansible.builtin.shell: sh -c "$(curl -fsSL https://astral.sh/uv/install.sh)"
@@ -136,6 +158,7 @@
     - install
     - languages
     - python
+    - ubuntu
 
 
 - name: asdf plugin-add hugo
@@ -147,6 +170,7 @@
     - asdf
     - languages
     - hugo
+    - ubuntu
 
 - name: asdf install hugo
   ansible.builtin.command: "asdf install hugo 0.111.3"
@@ -157,6 +181,7 @@
     - asdf
     - languages
     - hugo
+    - ubuntu
 
 - name: asdf global hugo 0.111.3
   ansible.builtin.command: "asdf global hugo 0.111.3"
@@ -167,3 +192,4 @@
     - asdf
     - languages
     - hugo
+    - ubuntu
