@@ -43,6 +43,19 @@
     - install
     - dotfiles
 
+# This is needed to that the dotfiles don't end up creating this
+# directory first and end up symlinking everything later added to
+# it to the dotfiles repo.
+- name: Create $HOME/.config/systemd/ directory if it does not exist
+  ansible.builtin.file:
+    path: $HOME/.config/systemd/user/default.target.wants
+    state: directory
+    mode: "0775"
+  tags:
+    - install
+    - dotfiles
+    - systemd
+
 - name: Stow dotfiles
   ansible.builtin.shell: cd $HOME/dotfiles && ./bootstrap.sh
   tags:
