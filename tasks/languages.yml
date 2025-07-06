@@ -1,8 +1,34 @@
-- name: Clone asdf
-  ansible.builtin.git:
-    repo: "https://github.com/asdf-vm/asdf.git"
-    dest: "{{ lookup('env', 'HOME') }}/.asdf"
-    version: v0.14.0
+- name: Download asdf
+  ansible.builtin.get_url:
+    url: "https://github.com/asdf-vm/asdf/releases/download/v0.18.0/asdf-v0.18.0-linux-amd64.tar.gz"
+    dest: /tmp/asdf.tar.gz
+    checksum: "md5:https://github.com/asdf-vm/asdf/releases/download/v0.18.0/asdf-v0.18.0-linux-amd64.tar.gz.md5"
+  tags:
+    - install
+    - asdf
+    - languages
+    - ubuntu
+
+- name: Extract asdf tarball to /tmp/
+  ansible.builtin.unarchive:
+    src: /tmp/asdf.tar.gz
+    dest: /tmp/
+    remote_src: yes # Indicates the source is on the remote host
+  tags:
+    - install
+    - asdf
+    - languages
+    - ubuntu
+
+- name: Copy executable to /usr/local/bin/asdf
+  become: true
+  ansible.builtin.copy:
+    src: /tmp/asdf
+    dest: /usr/local/bin/asdf
+    mode: '0755'
+    remote_src: yes
+    owner: root
+    group: root
   tags:
     - install
     - asdf
@@ -13,8 +39,8 @@
   ansible.builtin.blockinfile:
     path: $HOME/.bashrc
     block: |
-      . "$HOME/.asdf/asdf.sh"
-      . "$HOME/.asdf/completions/asdf.bash"
+      export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+      . <(asdf completion bash)
   tags:
     - install
     - asdf
@@ -25,8 +51,7 @@
   ansible.builtin.blockinfile:
     path: $HOME/.zshrc
     block: |
-      . "$HOME/.asdf/asdf.sh"
-      . "$HOME/.asdf/completions/asdf.bash"
+      export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
   tags:
     - install
     - asdf
@@ -35,8 +60,6 @@
 
 - name: asdf plugin-add nodejs
   ansible.builtin.command: "asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git"
-  environment:
-    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
   tags:
     - install
     - asdf
@@ -46,8 +69,6 @@
 
 - name: asdf plugin-add golang
   ansible.builtin.command: "asdf plugin add golang https://github.com/asdf-community/asdf-golang.git"
-  environment:
-    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
   tags:
     - install
     - asdf
@@ -68,8 +89,6 @@
 
 - name: asdf install golang
   ansible.builtin.command: "asdf install golang 1.22.2"
-  environment:
-    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
   tags:
     - install
     - asdf
@@ -77,20 +96,16 @@
     - go
     - ubuntu
 
-- name: asdf global nodejs 20.12.2
-  ansible.builtin.command: "asdf global nodejs 20.12.2"
-  environment:
-    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
+- name: asdf set --home nodejs 20.12.2
+  ansible.builtin.command: "asdf set --home nodejs 20.12.2"
   tags:
     - install
     - asdf
     - languages
     - nodejs
 
-- name: asdf global golang 1.22.2
-  ansible.builtin.command: "asdf global golang 1.22.2"
-  environment:
-    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
+- name: asdf set --home golang 1.22.2
+  ansible.builtin.command: "asdf set --home golang 1.22.2"
   tags:
     - install
     - asdf
@@ -118,11 +133,8 @@
     - rust
     - ubuntu
 
-
 - name: asdf plugin-add python
   ansible.builtin.command: "asdf plugin add python https://github.com/asdf-community/asdf-python.git"
-  environment:
-    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
   tags:
     - install
     - asdf
@@ -132,8 +144,6 @@
 
 - name: asdf install python
   ansible.builtin.command: "asdf install python 3.12.5"
-  environment:
-    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
   tags:
     - install
     - asdf
@@ -141,10 +151,8 @@
     - python
     - ubuntu
 
-- name: asdf global python 3.12.5
-  ansible.builtin.command: "asdf global python 3.12.5"
-  environment:
-    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
+- name: asdf set --home python 3.12.5
+  ansible.builtin.command: "asdf set --home python 3.12.5"
   tags:
     - install
     - asdf
@@ -160,11 +168,8 @@
     - python
     - ubuntu
 
-
 - name: asdf plugin-add hugo
   ansible.builtin.command: "asdf plugin add hugo https://github.com/nklmilojevic/asdf-hugo.git"
-  environment:
-    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
   tags:
     - install
     - asdf
@@ -174,8 +179,6 @@
 
 - name: asdf install hugo
   ansible.builtin.command: "asdf install hugo 0.111.3"
-  environment:
-    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
   tags:
     - install
     - asdf
@@ -183,10 +186,8 @@
     - hugo
     - ubuntu
 
-- name: asdf global hugo 0.111.3
-  ansible.builtin.command: "asdf global hugo 0.111.3"
-  environment:
-    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
+- name: asdf set --home hugo 0.111.3
+  ansible.builtin.command: "asdf set --home hugo 0.111.3"
   tags:
     - install
     - asdf
