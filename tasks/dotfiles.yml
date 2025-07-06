@@ -31,6 +31,18 @@
     - install
     - dotfiles
 
+# This is needed to that the dotfiles don't end up creating this
+# directory first and end up symlinking everything later added to
+# it to the dotfiles repo.
+- name: Create $HOME/.local/bin/ directory if it does not exist
+  ansible.builtin.file:
+    path: $HOME/.local/bin
+    state: directory
+    mode: "0775"
+  tags:
+    - install
+    - dotfiles
+
 - name: Stow dotfiles
   ansible.builtin.shell: cd $HOME/dotfiles && ./bootstrap.sh
   tags:
