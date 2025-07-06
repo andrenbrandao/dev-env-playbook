@@ -1,0 +1,4 @@
+[/]
+mru-sources=[('xkb', 'us+alt-intl')]
+sources=[('xkb', 'us+intl')]
+xkb-options=['caps:escape']
