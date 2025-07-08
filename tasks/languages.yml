@@ -25,7 +25,7 @@
   ansible.builtin.copy:
     src: /tmp/asdf
     dest: /usr/local/bin/asdf
-    mode: '0755'
+    mode: "0755"
     remote_src: yes
     owner: root
     group: root
@@ -117,8 +117,8 @@
   ansible.builtin.get_url:
     url: https://sh.rustup.rs
     dest: /tmp/sh.rustup.rs
-    mode: '0755'
-    force: 'yes'
+    mode: "0755"
+    force: "yes"
   tags:
     - install
     - languages
@@ -193,4 +193,25 @@
     - asdf
     - languages
     - hugo
+    - ubuntu
+
+# Used in systemd to automatically rename files in Downloads.
+- name: Install organize-tool
+  ansible.builtin.shell: pip install -U organize-tool
+  tags:
+    - install
+    - languages
+    - python
+    - ubuntu
+
+- name: Enable organize in systemd
+  ansible.builtin.systemd_service:
+    name: organize
+    enabled: true
+    state: restarted
+    scope: user
+  tags:
+    - install
+    - languages
+    - python
     - ubuntu
