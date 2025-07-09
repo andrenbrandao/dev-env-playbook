@@ -51,7 +51,7 @@
 - name: Install Albert launcher
   become: true
   ansible.builtin.apt:
-    deb: https://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_22.04/amd64/albert_0.26.4-0+649.1_amd64.deb 
+    deb: https://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_22.04/amd64/albert_0.26.4-0+649.1_amd64.deb
   tags:
     - install
     - apps
@@ -104,3 +104,16 @@
     - apps
     - ubuntu
     - calibre
+
+- name: Enable Calibre Backup in systemd
+  ansible.builtin.systemd_service:
+    name: calibre-backup
+    enabled: true
+    state: restarted
+    scope: user
+  tags:
+    - install
+    - apps
+    - ubuntu
+    - calibre
+    - calibresystemd
