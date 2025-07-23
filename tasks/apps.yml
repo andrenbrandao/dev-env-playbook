@@ -107,9 +107,9 @@
 
 - name: Enable Calibre Backup in systemd
   ansible.builtin.systemd_service:
-    name: calibre-backup
+    name: calibre-backup.timer
     enabled: true
-    state: restarted
+    state: started
     scope: user
   tags:
     - install
