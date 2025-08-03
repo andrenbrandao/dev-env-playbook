@@ -1,47 +1,29 @@
-- name: Download GitHub CLI GPG key
-  ansible.builtin.get_url:
-    url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
-    dest: /tmp/githubcli-archive-keyring.gpg
+- name: Install and Configure GitHub CLI
   become: true
   tags:
     - install
     - apps
     - ubuntu
     - gh-cli
+  block:
+    - name: Download GitHub CLI GPG key
+      ansible.builtin.get_url:
+        url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
+        dest: /tmp/githubcli-archive-keyring.gpg
 
-- name: Convert key to binary and place in /usr/share/keyrings
-  ansible.builtin.command: >
-    gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg /tmp/githubcli-archive-keyring.gpg
-  args:
-    creates: /usr/share/keyrings/githubcli-archive-keyring.gpg
-  become: true
-  tags:
-    - install
-    - apps
-    - ubuntu
-    - gh-cli
+    - name: Convert key to binary and place in /usr/share/keyrings
+      ansible.builtin.command: >
+        gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg /tmp/githubcli-archive-keyring.gpg
+      args:
+        creates: /usr/share/keyrings/githubcli-archive-keyring.gpg
 
-- name: Add GitHub CLI APT repository
-  ansible.builtin.apt_repository:
-    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
-    filename: github-cli
-    state: present
-    update_cache: no
-  become: true
-  tags:
-    - install
-    - apps
-    - ubuntu
-    - gh-cli
+    - name: Add GitHub CLI APT repository
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
+        filename: github-cli
+        state: present
 
-- name: Install GitHub CLI
-  ansible.builtin.apt:
-    name: gh
-    state: present
-    update_cache: true
-  become: true
-  tags:
-    - install
-    - apps
-    - ubuntu
-    - gh-cli
+    - name: Install GitHub CLI
+      ansible.builtin.apt:
+        name: gh
+        state: present
