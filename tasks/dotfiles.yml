@@ -12,7 +12,6 @@
     dest: "{{ lookup('env', 'HOME') }}/dotfiles-private"
     recursive: yes
     update: yes
-  no_log: true
   tags:
     - install
     - dotfiles
