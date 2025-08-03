@@ -8,7 +8,7 @@
 
 - name: Clone dotfiles
   ansible.builtin.git:
-    repo: "https://{{ DOTFILES_PRIVATE_PAT }}@github.com/andrenbrandao/dotfiles-private.git"
+    repo: "https://{{ secrets.DOTFILES_PRIVATE_PAT }}@github.com/andrenbrandao/dotfiles-private.git"
     dest: "{{ lookup('env', 'HOME') }}/dotfiles-private"
     recursive: yes
     update: yes
