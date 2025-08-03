@@ -40,7 +40,7 @@ jobs:
           echo "Executing the main playbook..."
 
           echo "$VAULT_PASSWORD" > vault_pass.txt
-          ansible-playbook local.yml --tags dotfiles --vault-password-file vault_pass.txt
+          ansible-playbook local.yml --vault-password-file vault_pass.txt
           shred -u vault_pass.txt # remove file
 
           echo "Playbook execution finished."
