@@ -13,6 +13,7 @@
     - ansible.builtin.import_tasks: tasks/zsh.yml
     # dotfiles needs to be after zsh to not have oh-my-zsh replace zshrc file
     # and to be ready for tmux
+    - ansible.builtin.import_tasks: tasks/github-cli.yml
     - ansible.builtin.import_tasks: tasks/dotfiles.yml
     - ansible.builtin.import_tasks: tasks/tmux.yml
     - ansible.builtin.import_tasks: tasks/neovim.yml
