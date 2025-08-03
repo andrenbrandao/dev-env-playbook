@@ -1,0 +1,48 @@
+# GitHub Action Workflow to Verify the Ansible Playbook
+# This workflow simulates setting up a new machine by running the Ansible
+# playbook on a clean, headless Ubuntu runner. It's designed to catch
+# issues with dependencies, commands, or repository access.
+
+name: Verify Ansible Playbook
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+  # Allows this workflow to be run manually from the Actions tab.
+  workflow_dispatch:
+
+jobs:
+  verify-setup:
+    name: Test Playbook on Ubuntu
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Install Ansible and Dependencies
+        run: |
+          # Install Ansible and other necessary tools.
+          sudo apt-add-repository -y ppa:ansible/ansible
+          sudo apt-get update -y
+          sudo apt-get install -y curl git software-properties-common ansible
+
+      - name: Run Ansible Playbook
+        env:
+          # Make the secret available as an environment variable.
+          PAT: ${{ secrets.DOTFILES_PRIVATE_PAT }}
+        run: |
+          echo "Configuring Git to use the Personal Access Token (PAT)..."
+
+          # These commands configure Git to automatically use the PAT for authentication,
+          # allowing it to clone private repositories referenced via HTTPS or SSH.
+          git config --global url."https://x-access-token:${{ env.PAT }}@github.com/".insteadOf "https://github.com/"
+          git config --global url."https://x-access-token:${{ env.PAT }}@github.com/".insteadOf "git@github.com:"
+
+          echo "Executing the main playbook..."
+          ansible-playbook local.yml
+
+          echo "Playbook execution finished."
