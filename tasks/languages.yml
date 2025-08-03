@@ -195,15 +195,37 @@
     - hugo
     - ubuntu
 
-# Used in systemd to automatically rename files in Downloads.
-- name: Install organize-tool
-  # TODO: swap --break-system-packages for pipx install
-  ansible.builtin.shell: pip install -U organize-tool --break-system-packages
+- name: Install pipx
+  become: true
+  ansible.builtin.apt:
+    name: pipx
+    update_cache: yes
   tags:
     - install
     - languages
     - python
     - ubuntu
+    - organize
+
+- name: Ensure pipx installations are in $PATH
+  ansible.builtin.shell: pipx ensurepath
+  register: result
+  tags:
+    - install
+    - languages
+    - python
+    - ubuntu
+    - organize
+
+# Used in systemd to automatically rename files in Downloads.
+- name: Install organize-tool
+  ansible.builtin.shell: pipx install organize-tool
+  tags:
+    - install
+    - languages
+    - python
+    - ubuntu
+    - organize
 
 - name: Enable organize in systemd
   ansible.builtin.systemd_service:
@@ -216,4 +238,5 @@
     - languages
     - python
     - ubuntu
+    - organize
   when: ansible_service_mgr == 'systemd' and ansible_facts.virtualization_type != 'docker'
