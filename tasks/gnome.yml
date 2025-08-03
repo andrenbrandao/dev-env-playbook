@@ -1,66 +1,41 @@
-- name: Set fact if GNOME is the current desktop
-  set_fact:
-    is_gnome: "{{ 'GNOME' in ansible_env.XDG_CURRENT_DESKTOP | default('') }}"
+- name: Configure Gnome Desktop
   tags:
     - install
     - gnome
     - ubuntu
+  block:
+    - name: Set fact if GNOME is the current desktop
+      set_fact:
+        is_gnome: "{{ 'GNOME' in ansible_env.XDG_CURRENT_DESKTOP | default('') }}"
 
-- name: Set fact if graphical session is active
-  set_fact:
-    has_display: "{{ ansible_env.DISPLAY | default('') | length > 0 }}"
-  tags:
-    - install
-    - gnome
-    - ubuntu
+    - name: Set fact if graphical session is active
+      set_fact:
+        has_display: "{{ ansible_env.DISPLAY | default('') | length > 0 }}"
 
-- name: Show current desktop environment
-  debug:
-    msg: "Current DE is {{ ansible_env.XDG_CURRENT_DESKTOP | default('undefined') }}"
-  tags:
-    - install
-    - gnome
-    - ubuntu
+    - name: Show current desktop environment
+      debug:
+        msg: "Current DE is {{ ansible_env.XDG_CURRENT_DESKTOP | default('undefined') }}"
 
-- name: Show if DISPLAY is set and non-empty
-  debug:
-    msg: "DISPLAY is valid: {{ ansible_env.DISPLAY | default('') | length > 0 }}"
-  tags:
-    - install
-    - gnome
-    - ubuntu
+    - name: Show if DISPLAY is set and non-empty
+      debug:
+        msg: "DISPLAY is valid: {{ ansible_env.DISPLAY | default('') | length > 0 }}"
 
-# Needed to load Kindle in Calibre. Otherwise, it will mount automatically and Calibre won't detect it.
-- name: Load Gnome automount=false settings
-  ansible.builtin.shell: dconf load /org/gnome/desktop/media-handling/ < ./gnome/media-handling.dconf
-  tags:
-    - install
-    - apps
-    - gnome
-    - ubuntu
-    - calibre
-  when:
-    - is_gnome
-    - has_display
+    - name: Load Gnome Settings
+      when:
+        - is_gnome
+        - has_display
+      block:
+        # Needed to load Kindle in Calibre. Otherwise, it will mount automatically and Calibre won't detect it.
+        - name: Load Gnome automount=false settings
+          ansible.builtin.shell: dconf load /org/gnome/desktop/media-handling/ < ./gnome/media-handling.dconf
+          tags:
+            - calibre
+            - apps
 
-# Contain keybindings to quickly switch apps with Alt+Number.
-- name: Load Gnome Keybindings
-  ansible.builtin.shell: dconf load /org/gnome/shell/keybindings/ < ./gnome/keybindings.dconf
-  tags:
-    - install
-    - gnome
-    - ubuntu
-  when:
-    - is_gnome
-    - has_display
+        # Contain keybindings to quickly switch apps with Alt+Number.
+        - name: Load Gnome Keybindings
+          ansible.builtin.shell: dconf load /org/gnome/shell/keybindings/ < ./gnome/keybindings.dconf
 
-# Contain remap from Capslock to ESC.
-- name: Load Gnome Input Sources
-  ansible.builtin.shell: dconf load /org/gnome/desktop/input-sources/ < ./gnome/input-sources.dconf
-  tags:
-    - install
-    - gnome
-    - ubuntu
-  when:
-    - is_gnome
-    - has_display
+        # Contain remap from Capslock to ESC.
+        - name: Load Gnome Input Sources
+          ansible.builtin.shell: dconf load /org/gnome/desktop/input-sources/ < ./gnome/input-sources.dconf
