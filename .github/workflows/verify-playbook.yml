@@ -35,17 +35,12 @@ jobs:
 
       - name: Run Ansible Playbook
         env:
-          # Make the secret available as an environment variable.
-          PAT: ${{ secrets.DOTFILES_PRIVATE_PAT }}
+          VAULT_PASSWORD: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
         run: |
-          echo "Configuring Git to use the Personal Access Token (PAT)..."
-
-          # These commands configure Git to automatically use the PAT for authentication,
-          # allowing it to clone private repositories referenced via HTTPS or SSH.
-          git config --global url."https://x-access-token:${{ env.PAT }}@github.com/".insteadOf "https://github.com/"
-          git config --global url."https://x-access-token:${{ env.PAT }}@github.com/".insteadOf "git@github.com:"
-
           echo "Executing the main playbook..."
-          ansible-playbook local.yml
+
+          echo "$VAULT_PASSWORD" > vault_pass.txt
+          ansible-playbook local.yml --tags dotfiles --vault-password-file vault_pass.txt
+          shred -u vault_pass.txt # remove file
 
           echo "Playbook execution finished."

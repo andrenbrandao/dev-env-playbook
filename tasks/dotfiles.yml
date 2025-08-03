@@ -8,10 +8,11 @@
 
 - name: Clone dotfiles
   ansible.builtin.git:
-    repo: "https://github.com/andrenbrandao/dotfiles.git"
-    dest: "{{ lookup('env', 'HOME') }}/dotfiles"
+    repo: "https://{{ DOTFILES_PRIVATE_PAT }}@github.com/andrenbrandao/dotfiles-private.git"
+    dest: "{{ lookup('env', 'HOME') }}/dotfiles-private"
     recursive: yes
     update: yes
+  no_log: true
   tags:
     - install
     - dotfiles
@@ -57,7 +58,7 @@
     - systemd
 
 - name: Stow dotfiles
-  ansible.builtin.shell: cd $HOME/dotfiles && ./bootstrap.sh
+  ansible.builtin.shell: cd $HOME/dotfiles-private && ./stow
   tags:
     - install
     - dotfiles
