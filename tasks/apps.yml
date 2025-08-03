@@ -37,19 +37,6 @@
     - ubuntu
 
 # https://albertlauncher.github.io/installation/
-- name: Add Albert APT repository for Ubuntu {{ ubuntu_version }}
-  ansible.builtin.apt_repository:
-    repo: "deb http://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_{{ ubuntu_version }}/ /"
-    filename: "home:manuelschneid3r"
-    state: present
-    update_cache: no
-  become: true
-  tags:
-    - install
-    - apps
-    - ubuntu
-    - albert
-
 - name: Download Albert GPG key
   ansible.builtin.get_url:
     url: https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_{{ ubuntu_version }}/Release.key
@@ -61,11 +48,24 @@
     - ubuntu
     - albert
 
-- name: Convert key to binary and install it
+- name: Convert key to binary and place in /usr/share/keyrings
   ansible.builtin.command: >
-    gpg --dearmor -o /etc/apt/trusted.gpg.d/home_manuelschneid3r.gpg /tmp/albert-release.key
+    gpg --dearmor -o /usr/share/keyrings/home_manuelschneid3r.gpg /tmp/albert-release.key
   args:
-    creates: /etc/apt/trusted.gpg.d/home_manuelschneid3r.gpg
+    creates: /usr/share/keyrings/home_manuelschneid3r.gpg
+  become: true
+  tags:
+    - install
+    - apps
+    - ubuntu
+    - albert
+
+- name: Add Albert APT repository for Ubuntu {{ ubuntu_version }}
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/home_manuelschneid3r.gpg] http://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_{{ ubuntu_version }}/ /"
+    filename: home_manuelschneid3r
+    state: present
+    update_cache: no
   become: true
   tags:
     - install
