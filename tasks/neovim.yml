@@ -1,21 +1,17 @@
-- name: Clone Neovim
-  ansible.builtin.git:
-    repo: "https://github.com/neovim/neovim.git"
-    dest: "/tmp/neovim"
-    version: v0.10.2
+- name: Build and Install Neovim from source
   tags:
     - install
     - neovim
+  block:
+    - name: Clone Neovim
+      ansible.builtin.git:
+        repo: "https://github.com/neovim/neovim.git"
+        dest: "/tmp/neovim"
+        version: v0.10.2
 
-- name: Build neovim
-  shell: "cd /tmp/neovim && make CMAKE_BUILD_TYPE=RelWithDebInfo"
-  tags:
-    - install
-    - neovim
+    - name: Build neovim
+      ansible.builtin.shell: "cd /tmp/neovim && make CMAKE_BUILD_TYPE=RelWithDebInfo"
 
-- name: Install neovim
-  become: true
-  shell: "cd /tmp/neovim && make install"
-  tags:
-    - install
-    - neovim
+    - name: Install neovim
+      become: true
+      ansible.builtin.shell: "cd /tmp/neovim && make install"
