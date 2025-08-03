@@ -37,9 +37,9 @@
     - ubuntu
 
 # https://albertlauncher.github.io/installation/
-- name: Add Albert APT repository for Ubuntu 22.04
+- name: Add Albert APT repository for Ubuntu {{ ubuntu_version }}
   ansible.builtin.apt_repository:
-    repo: "deb http://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_22.04/ /"
+    repo: "deb http://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_{{ ubuntu_version }}/ /"
     filename: "home:manuelschneid3r"
     state: present
     update_cache: no
@@ -52,7 +52,7 @@
 
 - name: Download Albert GPG key
   ansible.builtin.get_url:
-    url: https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_22.04/Release.key
+    url: https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_{{ ubuntu_version }}/Release.key
     dest: /tmp/albert-release.key
   become: true
   tags:
@@ -73,20 +73,11 @@
     - ubuntu
     - albert
 
-- name: Refresh apt cache
-  ansible.builtin.apt:
-    update_cache: yes
-  become: true
-  tags:
-    - install
-    - apps
-    - ubuntu
-    - albert
-
 - name: Install Albert launcher
   ansible.builtin.apt:
     name: albert
     state: present
+    update_cache: true
   become: true
   tags:
     - install

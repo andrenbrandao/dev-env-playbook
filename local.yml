@@ -2,6 +2,7 @@
   become: no
   vars:
     the_user: "{{ ansible_user_id }}"
+    ubuntu_version: "{{ ansible_lsb.release }}"
   pre_tasks:
     - name: Update cache
       become: true
