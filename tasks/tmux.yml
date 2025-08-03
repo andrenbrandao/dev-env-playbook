@@ -1,23 +1,21 @@
-- name: Install tmux
-  become: true
-  ansible.builtin.apt:
-    name: tmux
+- name: Install and Configure tmux
   tags:
     - install
     - tmux
+  block:
+    - name: Install tmux
+      become: true
+      ansible.builtin.apt:
+        name: tmux
 
-- name: Clone tpm
-  ansible.builtin.git:
-    repo: "https://github.com/tmux-plugins/tpm"
-    dest: "{{ lookup('env', 'HOME') }}/.tmux/plugins/tpm"
-    recursive: yes
-    update: yes
-  tags:
-    - install
-    - tmux
+    - name: Clone tpm
+      become: false
+      ansible.builtin.git:
+        repo: "https://github.com/tmux-plugins/tpm"
+        dest: "{{ lookup('env', 'HOME') }}/.tmux/plugins/tpm"
+        recursive: yes
+        update: yes
 
-- name: Run tpm install scripts
-  ansible.builtin.shell: $HOME/.tmux/plugins/tpm/scripts/install_plugins.sh
-  tags:
-    - install
-    - tmux
+    - name: Run tpm install scripts
+      become: false
+      ansible.builtin.shell: "{{ lookup('env', 'HOME') }}/.tmux/plugins/tpm/scripts/install_plugins.sh"
