@@ -197,7 +197,8 @@
 
 # Used in systemd to automatically rename files in Downloads.
 - name: Install organize-tool
-  ansible.builtin.shell: pip install -U organize-tool
+  # TODO: swap --break-system-packages for pipx install
+  ansible.builtin.shell: pip install -U organize-tool --break-system-packages
   tags:
     - install
     - languages
