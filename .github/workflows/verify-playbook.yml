@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Install Ansible and Dependencies
         run: |
