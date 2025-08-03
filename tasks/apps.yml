@@ -85,10 +85,46 @@
     - ubuntu
     - albert
 
+- name: Download Google Linux signing key
+  ansible.builtin.get_url:
+    url: https://dl.google.com/linux/linux_signing_key.pub
+    dest: /tmp/google-signing-key.pub
+  become: true
+  tags:
+    - install
+    - apps
+    - ubuntu
+    - chrome
+
+- name: Convert public key to binary and move to /etc/apt/trusted.gpg.d
+  ansible.builtin.command: >
+    gpg --dearmor -o /etc/apt/trusted.gpg.d/google.gpg /tmp/google-signing-key.pub
+  args:
+    creates: /etc/apt/trusted.gpg.d/google.gpg
+  become: true
+  tags:
+    - install
+    - apps
+    - ubuntu
+    - chrome
+
+- name: Add Google Chrome APT repository
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main"
+    state: present
+  tags:
+    - install
+    - apps
+    - ubuntu
+    - chrome
+
 - name: Install Google Chrome
   become: true
   ansible.builtin.apt:
-    deb: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    name: google-chrome-stable
+    state: present
+    update_cache: true
   tags:
     - install
     - apps
