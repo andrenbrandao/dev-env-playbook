@@ -1,13 +1,3 @@
-- name: Add Guake repository
-  become: true
-  ansible.builtin.apt_repository:
-    repo: ppa:linuxuprising/guake
-    state: present
-  tags:
-    - install
-    - apps
-    - ubuntu
-
 - name: Update repositories cache and install Guake
   become: true
   ansible.builtin.apt:
