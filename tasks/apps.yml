@@ -96,11 +96,11 @@
     - ubuntu
     - chrome
 
-- name: Convert public key to binary and move to /etc/apt/trusted.gpg.d
+- name: Convert key to binary and place in /usr/share/keyrings
   ansible.builtin.command: >
-    gpg --dearmor -o /etc/apt/trusted.gpg.d/google.gpg /tmp/google-signing-key.pub
+    gpg --dearmor -o /usr/share/keyrings/google.gpg /tmp/google-signing-key.pub
   args:
-    creates: /etc/apt/trusted.gpg.d/google.gpg
+    creates: /usr/share/keyrings/google.gpg
   become: true
   tags:
     - install
@@ -111,8 +111,9 @@
 - name: Add Google Chrome APT repository
   become: true
   ansible.builtin.apt_repository:
-    repo: "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main"
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/google.gpg] http://dl.google.com/linux/chrome/deb/ stable main"
     state: present
+    filename: google-chrome
   tags:
     - install
     - apps
