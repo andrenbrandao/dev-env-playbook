@@ -132,19 +132,52 @@
     - ubuntu
     - chrome
 
-# Install DejaDup for backups. Was using flatpak first,
-# but the version that comes pre-installed from apt
-# works fine.
-# https://apps.gnome.org/DejaDup/
-- name: Install DejaDup
+- name: Install Flatpak
   become: true
   ansible.builtin.apt:
-    name: deja-dup
+    name: flatpak
   tags:
     - install
     - apps
     - ubuntu
     - dejadup
+
+- name: Configure Flathub
+  ansible.builtin.command: >
+    flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+  args:
+    creates: "{{ lookup('env', 'HOME') }}/.local/share/flatpak/repo/flathub.trustedkeys.gpg"
+  tags:
+    - install
+    - apps
+    - ubuntu
+    - dejadup
+
+- name: Set fact if graphical session is active
+  set_fact:
+    has_display: "{{ ansible_env.DISPLAY | default('') | length > 0 }}"
+  tags:
+    - install
+    - apps
+    - ubuntu
+    - dejadup
+    - gnome
+
+# Install DejaDup for backups. https://apps.gnome.org/DejaDup/
+# Have to use flatpak to get the most recent versions with Restic.
+- name: Install DejaDup (Flatpak user scope)
+  ansible.builtin.command: >
+    flatpak install --user -y flathub org.gnome.DejaDup
+  args:
+    creates: "{{ lookup('env', 'HOME') }}/.local/share/flatpak/app/org.gnome.DejaDup"
+  tags:
+    - install
+    - apps
+    - ubuntu
+    - dejadup
+    - gnome
+  when:
+    - has_display
 
 # Installing to backup Calibre library.
 - name: Install Calibre dependencies
