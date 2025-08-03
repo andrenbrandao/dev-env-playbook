@@ -39,6 +39,22 @@ ansible-playbook local.yml --tags neovim --ask-become
 
 Notice the usage of `--ask-become` as the action might require the superuser password.
 
+## Running CI/CD Locally
+
+In order to verify the GH Actions are running properly before submitting the code, use https://github.com/nektos/act. See the [installation guide](https://nektosact.com/installation/gh.html) with the GitHub CLI.
+
+```bash
+gh extension install https://github.com/nektos/gh-act
+```
+
+Then, create a Personal Acess Token with Contents read-only permissions and add it to a `.secrets` file.
+
+Execute the following to run it locally:
+
+```bash
+gh act push -P ubuntu-24.04=ghcr.io/catthehacker/ubuntu:act-24.04
+```
+
 ## How to experiment with Docker and Ansible
 
 The point of using docker containers is that we can play with new instances of Ubuntu and check if the ansible scripts are working properly, simulating the situation of getting a new machine.
