@@ -6,6 +6,13 @@
     - install
     - dotfiles
 
+- name: Debug Dotfiles key
+  debug:
+    msg: "Git token starts with {{ vault.DOTFILES_PRIVATE_PAT[:10] }}..."
+  tags:
+    - install
+    - dotfiles
+
 - name: Clone dotfiles
   ansible.builtin.git:
     repo: "https://{{ vault.DOTFILES_PRIVATE_PAT }}@github.com/andrenbrandao/dotfiles-private.git"
