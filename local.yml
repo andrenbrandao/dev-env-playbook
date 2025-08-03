@@ -11,7 +11,7 @@
     - name: Load Vault
       ansible.builtin.include_vars:
         file: infra/vault.yml
-        name: secrets
+        name: vault
       tags:
         - install
         - dotfiles
