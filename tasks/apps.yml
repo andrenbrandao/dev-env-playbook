@@ -162,3 +162,4 @@
     - apps
     - ubuntu
     - calibre
+  when: ansible_service_mgr == 'systemd' and ansible_facts.virtualization_type != 'docker'
