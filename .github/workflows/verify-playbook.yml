@@ -26,6 +26,8 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
         with:
+          # Important for PAT to be used in ansible's git clone for dotfiles-private.
+          # See https://github.com/orgs/community/discussions/25240#discussioncomment-3247038.
           persist-credentials: false
 
       - name: Install Ansible and Dependencies
