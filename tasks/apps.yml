@@ -1,258 +1,191 @@
-- name: Install pipx
+- name: Install and Configure pipx and organize-tool
   become: true
-  ansible.builtin.apt:
-    name: pipx
-    update_cache: yes
   tags:
     - install
+    - apps
     - python
     - ubuntu
     - organize
+  block:
+    - name: Install pipx
+      ansible.builtin.apt:
+        name: pipx
 
-- name: Ensure pipx installations are in $PATH
-  ansible.builtin.shell: pipx ensurepath
-  register: result
-  tags:
-    - install
-    - python
-    - ubuntu
-    - organize
+    - name: Ensure pipx installations are in $PATH
+      become: false
+      ansible.builtin.shell: pipx ensurepath
+      register: result
 
-# Used in systemd to automatically rename files in Downloads.
-- name: Install organize-tool
-  ansible.builtin.shell: pipx install organize-tool
-  tags:
-    - install
-    - python
-    - ubuntu
-    - organize
+    # Used in systemd to automatically rename files in Downloads.
+    - name: Install organize-tool
+      become: false
+      ansible.builtin.shell: pipx install organize-tool
 
-- name: Enable organize in systemd
-  ansible.builtin.systemd_service:
-    name: organize
-    enabled: true
-    state: restarted
-    scope: user
-  tags:
-    - install
-    - python
-    - ubuntu
-    - organize
-  when: ansible_service_mgr == 'systemd' and ansible_facts.virtualization_type != 'docker'
+    - name: Enable organize in systemd
+      become: false
+      ansible.builtin.systemd_service:
+        name: organize
+        enabled: true
+        state: restarted
+        scope: user
+      when: ansible_service_mgr == 'systemd' and ansible_facts.virtualization_type != 'docker'
 
-- name: Update repositories cache and install Guake
+- name: Install and Configure Guake
   become: true
-  ansible.builtin.apt:
-    name: guake
-    update_cache: yes
   tags:
     - install
     - apps
     - ubuntu
+  block:
+    - name: Install Guake
+      ansible.builtin.apt:
+        name: guake
+        update_cache: true
 
-- name: Restore guake prefs
-  ansible.builtin.shell: guake --restore-preferences $HOME/.config/guake/prefs.guake
-  tags:
-    - install
-    - apps
-    - ubuntu
-
-- name: Add Solaar repository
-  become: true
-  ansible.builtin.apt_repository:
-    repo: ppa:solaar-unifying/stable
-    state: present
-  tags:
-    - install
-    - apps
-    - ubuntu
+    - name: Restore guake prefs
+      become: false
+      ansible.builtin.shell: guake --restore-preferences $HOME/.config/guake/prefs.guake
 
 # Used to list Logi mouse and keyboard devices
-- name: Update repositories cache and install Solaar
-  become: true
-  ansible.builtin.apt:
-    name: solaar
-    update_cache: yes
-  tags:
-    - install
-    - apps
-    - ubuntu
-
-# https://albertlauncher.github.io/installation/
-- name: Download Albert GPG key
-  ansible.builtin.get_url:
-    url: https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_{{ ubuntu_version }}/Release.key
-    dest: /tmp/albert-release.key
+- name: Install and Configure Solaar
   become: true
   tags:
     - install
     - apps
     - ubuntu
-    - albert
+  block:
+    - name: Add Solaar repository
+      ansible.builtin.apt_repository:
+        repo: ppa:solaar-unifying/stable
+        state: present
 
-- name: Convert key to binary and place in /usr/share/keyrings
-  ansible.builtin.command: >
-    gpg --dearmor -o /usr/share/keyrings/home_manuelschneid3r.gpg /tmp/albert-release.key
-  args:
-    creates: /usr/share/keyrings/home_manuelschneid3r.gpg
+    - name: Install Solaar
+      ansible.builtin.apt:
+        name: solaar
+        update_cache: true
+
+- name: Install and Configure Albert Launcher
   become: true
   tags:
     - install
     - apps
     - ubuntu
     - albert
+  block:
+    - name: Download Albert GPG key
+      ansible.builtin.get_url:
+        url: https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_{{ ubuntu_version }}/Release.key
+        dest: /tmp/albert-release.key
 
-- name: Add Albert APT repository for Ubuntu {{ ubuntu_version }}
-  ansible.builtin.apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/home_manuelschneid3r.gpg] http://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_{{ ubuntu_version }}/ /"
-    filename: home_manuelschneid3r
-    state: present
-    update_cache: no
-  become: true
-  tags:
-    - install
-    - apps
-    - ubuntu
-    - albert
+    - name: Convert key to binary and place in /usr/share/keyrings
+      ansible.builtin.command: >
+        gpg --dearmor -o /usr/share/keyrings/home_manuelschneid3r.gpg /tmp/albert-release.key
+      args:
+        creates: /usr/share/keyrings/home_manuelschneid3r.gpg
 
-- name: Install Albert launcher
-  ansible.builtin.apt:
-    name: albert
-    state: present
-    update_cache: true
-  become: true
-  tags:
-    - install
-    - apps
-    - ubuntu
-    - albert
+    - name: Add Albert APT repository for Ubuntu {{ ubuntu_version }}
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/usr/share/keyrings/home_manuelschneid3r.gpg] http://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_{{ ubuntu_version }}/ /"
+        filename: home_manuelschneid3r
+        state: present
+        update_cache: false
 
-- name: Download Google Linux signing key
-  ansible.builtin.get_url:
-    url: https://dl.google.com/linux/linux_signing_key.pub
-    dest: /tmp/google-signing-key.pub
-  become: true
-  tags:
-    - install
-    - apps
-    - ubuntu
-    - chrome
+    - name: Install Albert launcher
+      ansible.builtin.apt:
+        name: albert
+        state: present
+        update_cache: true
 
-- name: Convert key to binary and place in /usr/share/keyrings
-  ansible.builtin.command: >
-    gpg --dearmor -o /usr/share/keyrings/google.gpg /tmp/google-signing-key.pub
-  args:
-    creates: /usr/share/keyrings/google.gpg
+- name: Install and Configure Google Chrome
   become: true
   tags:
     - install
     - apps
     - ubuntu
     - chrome
+  block:
+    - name: Download Google Linux signing key
+      ansible.builtin.get_url:
+        url: https://dl.google.com/linux/linux_signing_key.pub
+        dest: /tmp/google-signing-key.pub
 
-- name: Add Google Chrome APT repository
-  become: true
-  ansible.builtin.apt_repository:
-    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/google.gpg] http://dl.google.com/linux/chrome/deb/ stable main"
-    state: present
-    filename: google-chrome
-  tags:
-    - install
-    - apps
-    - ubuntu
-    - chrome
+    - name: Convert key to binary and place in /usr/share/keyrings
+      ansible.builtin.command: >
+        gpg --dearmor -o /usr/share/keyrings/google.gpg /tmp/google-signing-key.pub
+      args:
+        creates: /usr/share/keyrings/google.gpg
 
-- name: Install Google Chrome
-  become: true
-  ansible.builtin.apt:
-    name: google-chrome-stable
-    state: present
-    update_cache: true
-  tags:
-    - install
-    - apps
-    - ubuntu
-    - chrome
+    - name: Add Google Chrome APT repository
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/google.gpg] http://dl.google.com/linux/chrome/deb/ stable main"
+        state: present
+        filename: google-chrome
 
-- name: Install Flatpak
-  become: true
-  ansible.builtin.apt:
-    name: flatpak
-  tags:
-    - install
-    - apps
-    - ubuntu
-    - dejadup
+    - name: Install Google Chrome
+      ansible.builtin.apt:
+        name: google-chrome-stable
+        state: present
+        update_cache: true
 
-- name: Configure Flathub
-  ansible.builtin.command: >
-    flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-  args:
-    creates: "{{ lookup('env', 'HOME') }}/.local/share/flatpak/repo/flathub.trustedkeys.gpg"
+- name: Install and Configure Flatpak and DejaDup
   tags:
     - install
     - apps
     - ubuntu
     - dejadup
+  block:
+    - name: Install Flatpak
+      become: true
+      ansible.builtin.apt:
+        name: flatpak
 
-- name: Set fact if graphical session is active
-  set_fact:
-    has_display: "{{ ansible_env.DISPLAY | default('') | length > 0 }}"
-  tags:
-    - install
-    - apps
-    - ubuntu
-    - dejadup
-    - gnome
+    - name: Configure Flathub
+      ansible.builtin.command: >
+        flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+      args:
+        creates: "{{ lookup('env', 'HOME') }}/.local/share/flatpak/repo/flathub.trustedkeys.gpg"
 
-# Install DejaDup for backups. https://apps.gnome.org/DejaDup/
-# Have to use flatpak to get the most recent versions with Restic.
-- name: Install DejaDup (Flatpak user scope)
-  ansible.builtin.command: >
-    flatpak install --user -y flathub org.gnome.DejaDup
-  args:
-    creates: "{{ lookup('env', 'HOME') }}/.local/share/flatpak/app/org.gnome.DejaDup"
-  tags:
-    - install
-    - apps
-    - ubuntu
-    - dejadup
-    - gnome
-  when:
-    - has_display
+    - name: Set fact if graphical session is active
+      tags:
+        - gnome
+      set_fact:
+        has_display: "{{ ansible_env.DISPLAY | default('') | length > 0 }}"
 
-# Installing to backup Calibre library.
-- name: Install Calibre dependencies
-  become: true
-  ansible.builtin.apt:
-    name: libxcb-cursor0
+    # Install DejaDup for backups. https://apps.gnome.org/DejaDup/
+    # Have to use flatpak to get the most recent versions with Restic.
+    - name: Install DejaDup (Flatpak user scope)
+      tags:
+        - gnome
+      ansible.builtin.command: >
+        flatpak install --user -y flathub org.gnome.DejaDup
+      args:
+        creates: "{{ lookup('env', 'HOME') }}/.local/share/flatpak/app/org.gnome.DejaDup"
+      when:
+        - has_display
+
+- name: Install and Configure Calibre
   tags:
     - install
     - apps
     - ubuntu
     - calibre
+  block:
+    - name: Install Calibre dependencies
+      become: true
+      ansible.builtin.apt:
+        name: libxcb-cursor0
 
-# https://manual.calibre-ebook.com/faq.html#how-do-i-move-my-calibre-data-from-one-computer-to-another
-# After installation, simply load backup with DejaDup
-# and import the config from CalibreBackup directory.
-- name: Install Calibre
-  become: true
-  ansible.builtin.shell: wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sudo sh /dev/stdin
-  tags:
-    - install
-    - apps
-    - ubuntu
-    - calibre
+    # https://manual.calibre-ebook.com/faq.html#how-do-i-move-my-calibre-data-from-one-computer-to-another
+    # After installation, simply load backup with DejaDup
+    # and import the config from CalibreBackup directory.
+    - name: Install Calibre
+      become: true
+      ansible.builtin.shell: wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sudo sh /dev/stdin
 
-- name: Enable Calibre Backup in systemd
-  ansible.builtin.systemd_service:
-    name: calibre-backup.timer
-    enabled: true
-    state: started
-    scope: user
-  tags:
-    - install
-    - apps
-    - ubuntu
-    - calibre
-  when: ansible_service_mgr == 'systemd' and ansible_facts.virtualization_type != 'docker'
+    - name: Enable Calibre Backup in systemd
+      ansible.builtin.systemd_service:
+        name: calibre-backup.timer
+        enabled: true
+        state: started
+        scope: user
+      when: ansible_service_mgr == 'systemd' and ansible_facts.virtualization_type != 'docker'
