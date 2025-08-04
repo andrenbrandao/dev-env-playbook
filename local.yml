@@ -3,6 +3,11 @@
   vars:
     the_user: "{{ ansible_user_id }}"
     ubuntu_version: "{{ ansible_lsb.release }}"
+    asdf_version: "0.18.0"
+    nodejs_version: "20.12.2"
+    golang_version: "1.22.2"
+    python_version: "3.12.5"
+    hugo_version: "0.111.3"
   pre_tasks:
     - name: Update cache
       become: true

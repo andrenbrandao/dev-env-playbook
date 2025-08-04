@@ -1,196 +1,123 @@
-- name: Download asdf
-  ansible.builtin.get_url:
-    url: "https://github.com/asdf-vm/asdf/releases/download/v0.18.0/asdf-v0.18.0-linux-amd64.tar.gz"
-    dest: /tmp/asdf.tar.gz
-    checksum: "md5:https://github.com/asdf-vm/asdf/releases/download/v0.18.0/asdf-v0.18.0-linux-amd64.tar.gz.md5"
+- name: Install and Configure asdf
   tags:
     - install
     - asdf
     - languages
     - ubuntu
+  block:
+    - name: Download asdf
+      ansible.builtin.get_url:
+        url: "https://github.com/asdf-vm/asdf/releases/download/v{{ asdf_version }}/asdf-v{{ asdf_version }}-linux-amd64.tar.gz"
+        dest: /tmp/asdf.tar.gz
+        checksum: "md5:https://github.com/asdf-vm/asdf/releases/download/v{{ asdf_version }}/asdf-v{{ asdf_version }}-linux-amd64.tar.gz.md5"
 
-- name: Extract asdf tarball to /tmp/
-  ansible.builtin.unarchive:
-    src: /tmp/asdf.tar.gz
-    dest: /tmp/
-    remote_src: yes # Indicates the source is on the remote host
+    - name: Extract asdf tarball to /tmp/
+      ansible.builtin.unarchive:
+        src: /tmp/asdf.tar.gz
+        dest: /tmp/
+        remote_src: yes
+
+    - name: Copy executable to /usr/local/bin/asdf
+      become: true
+      ansible.builtin.copy:
+        src: /tmp/asdf
+        dest: /usr/local/bin/asdf
+        mode: "0755"
+        remote_src: yes
+        owner: root
+        group: root
+
+    - name: Configure asdf in .bashrc
+      become: false
+      ansible.builtin.blockinfile:
+        path: "{{ lookup('env', 'HOME') }}/.bashrc"
+        block: |
+          export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+          . <(asdf completion bash)
+
+    - name: Configure asdf in .zshrc
+      become: false
+      ansible.builtin.blockinfile:
+        path: "{{ lookup('env', 'HOME') }}/.zshrc"
+        block: |
+          export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+
+- name: Install Languages with asdf
   tags:
     - install
     - asdf
     - languages
     - ubuntu
+  block:
+    - name: Install Node.js
+      become: false
+      tags:
+        - nodejs
+      block:
+        - name: asdf plugin-add nodejs
+          ansible.builtin.command: "asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git"
+        - name: asdf install nodejs {{ nodejs_version }}
+          ansible.builtin.command: "asdf install nodejs {{ nodejs_version }}"
+        - name: asdf set --home nodejs {{ nodejs_version }}
+          ansible.builtin.command: "asdf set --home nodejs {{ nodejs_version }}"
 
-- name: Copy executable to /usr/local/bin/asdf
-  become: true
-  ansible.builtin.copy:
-    src: /tmp/asdf
-    dest: /usr/local/bin/asdf
-    mode: "0755"
-    remote_src: yes
-    owner: root
-    group: root
-  tags:
-    - install
-    - asdf
-    - languages
-    - ubuntu
+    - name: Install Go
+      become: false
+      tags:
+        - go
+      block:
+        - name: asdf plugin-add golang
+          ansible.builtin.command: "asdf plugin add golang https://github.com/asdf-community/asdf-golang.git"
+        - name: asdf install golang {{ golang_version }}
+          ansible.builtin.command: "asdf install golang {{ golang_version }}"
+        - name: asdf set --home golang {{ golang_version }}
+          ansible.builtin.command: "asdf set --home golang {{ golang_version }}"
 
-- name: Configure asdf in .bashrc
-  ansible.builtin.blockinfile:
-    path: $HOME/.bashrc
-    block: |
-      export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
-      . <(asdf completion bash)
-  tags:
-    - install
-    - asdf
-    - languages
-    - ubuntu
+    - name: Install Python
+      become: false
+      tags:
+        - python
+      block:
+        - name: asdf plugin-add python
+          ansible.builtin.command: "asdf plugin add python https://github.com/asdf-community/asdf-python.git"
+        - name: asdf install python {{ python_version }}
+          ansible.builtin.command: "asdf install python {{ python_version }}"
+        - name: asdf set --home python {{ python_version }}
+          ansible.builtin.command: "asdf set --home python {{ python_version }}"
 
-- name: Configure asdf in .zshrc
-  ansible.builtin.blockinfile:
-    path: $HOME/.zshrc
-    block: |
-      export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
-  tags:
-    - install
-    - asdf
-    - languages
-    - ubuntu
-
-- name: asdf plugin-add nodejs
-  ansible.builtin.command: "asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git"
-  tags:
-    - install
-    - asdf
-    - languages
-    - nodejs
-    - ubuntu
-
-- name: asdf plugin-add golang
-  ansible.builtin.command: "asdf plugin add golang https://github.com/asdf-community/asdf-golang.git"
-  tags:
-    - install
-    - asdf
-    - languages
-    - go
-    - ubuntu
-
-- name: asdf install nodejs
-  ansible.builtin.command: "asdf install nodejs 20.12.2"
-  environment:
-    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.asdf/bin"
-  tags:
-    - install
-    - asdf
-    - languages
-    - nodejs
-    - ubuntu
-
-- name: asdf install golang
-  ansible.builtin.command: "asdf install golang 1.22.2"
-  tags:
-    - install
-    - asdf
-    - languages
-    - go
-    - ubuntu
-
-- name: asdf set --home nodejs 20.12.2
-  ansible.builtin.command: "asdf set --home nodejs 20.12.2"
-  tags:
-    - install
-    - asdf
-    - languages
-    - nodejs
-
-- name: asdf set --home golang 1.22.2
-  ansible.builtin.command: "asdf set --home golang 1.22.2"
-  tags:
-    - install
-    - asdf
-    - languages
-    - go
-    - ubuntu
-
-- name: Download Rust and Cargo Installer
-  ansible.builtin.get_url:
-    url: https://sh.rustup.rs
-    dest: /tmp/sh.rustup.rs
-    mode: "0755"
-    force: "yes"
-  tags:
-    - install
-    - languages
-    - rust
-    - ubuntu
+    - name: Install Hugo
+      become: false
+      block:
+        - name: asdf plugin-add hugo
+          ansible.builtin.command: "asdf plugin add hugo https://github.com/nklmilojevic/asdf-hugo.git"
+        - name: asdf install hugo {{ hugo_version }}
+          ansible.builtin.command: "asdf install hugo {{ hugo_version }}"
+        - name: asdf set --home hugo
+          ansible.builtin.command: "asdf set --home hugo {{ hugo_version }}"
 
 - name: Install Rust and Cargo
-  ansible.builtin.shell: /tmp/sh.rustup.rs -y
+  become: false
   tags:
     - install
     - languages
     - rust
     - ubuntu
+  block:
+    - name: Download Rust and Cargo Installer
+      ansible.builtin.get_url:
+        url: https://sh.rustup.rs
+        dest: /tmp/sh.rustup.rs
+        mode: "0755"
+        force: "yes"
 
-- name: asdf plugin-add python
-  ansible.builtin.command: "asdf plugin add python https://github.com/asdf-community/asdf-python.git"
-  tags:
-    - install
-    - asdf
-    - languages
-    - python
-    - ubuntu
-
-- name: asdf install python
-  ansible.builtin.command: "asdf install python 3.12.5"
-  tags:
-    - install
-    - asdf
-    - languages
-    - python
-    - ubuntu
-
-- name: asdf set --home python 3.12.5
-  ansible.builtin.command: "asdf set --home python 3.12.5"
-  tags:
-    - install
-    - asdf
-    - languages
-    - python
-    - ubuntu
+    - name: Install Rust and Cargo
+      ansible.builtin.shell: /tmp/sh.rustup.rs -y
 
 - name: Install uv package manager for Python
-  ansible.builtin.shell: sh -c "$(curl -fsSL https://astral.sh/uv/install.sh)"
+  become: false
   tags:
     - install
     - languages
     - python
     - ubuntu
-
-- name: asdf plugin-add hugo
-  ansible.builtin.command: "asdf plugin add hugo https://github.com/nklmilojevic/asdf-hugo.git"
-  tags:
-    - install
-    - asdf
-    - languages
-    - hugo
-    - ubuntu
-
-- name: asdf install hugo
-  ansible.builtin.command: "asdf install hugo 0.111.3"
-  tags:
-    - install
-    - asdf
-    - languages
-    - hugo
-    - ubuntu
-
-- name: asdf set --home hugo 0.111.3
-  ansible.builtin.command: "asdf set --home hugo 0.111.3"
-  tags:
-    - install
-    - asdf
-    - languages
-    - hugo
-    - ubuntu
+  ansible.builtin.shell: sh -c "$(curl -fsSL https://astral.sh/uv/install.sh)"
