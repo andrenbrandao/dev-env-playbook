@@ -1,63 +1,55 @@
-- name: Install zsh
-  become: true
-  ansible.builtin.apt:
-    name: zsh
+- name: Install and Configure Zsh and Oh My Zsh
   tags:
     - install
     - zsh
+  block:
+    - name: Install zsh
+      become: true
+      ansible.builtin.apt:
+        name: zsh
 
-- name: Change user shell to zsh
-  become: yes
-  user:
-    name: "{{ the_user }}"
-    shell: /bin/zsh
-  tags:
-    - install
-    - zsh
+    - name: Change user shell to zsh
+      become: true
+      ansible.builtin.user:
+        name: "{{ the_user }}"
+        shell: /bin/zsh
 
-- name: Download Oh My Zsh installation script
-  ansible.builtin.get_url:
-    url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-    dest: /tmp/install_ohmyzsh.sh
-  tags:
-    - install
-    - zsh
+    - name: Install Oh My Zsh
+      become: false
+      block:
+        - name: Download Oh My Zsh installation script
+          ansible.builtin.get_url:
+            url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+            dest: /tmp/install_ohmyzsh.sh
+            mode: "0755"
 
-- name: Run Oh My Zsh installation script
-  ansible.builtin.command: sh /tmp/install_ohmyzsh.sh --unattended
-  register: ohmyzsh_result
-  failed_when: "'FAILED' in ohmyzsh_result.stderr"
-  tags:
-    - install
-    - zsh
+        - name: Run Oh My Zsh installation script
+          ansible.builtin.command: sh /tmp/install_ohmyzsh.sh --unattended
+          register: ohmyzsh_result
+          failed_when: "'FAILED' in ohmyzsh_result.stderr"
 
-- name: Install zsh-autosuggestions
-  ansible.builtin.git:
-    repo: "https://github.com/zsh-users/zsh-autosuggestions.git"
-    dest: "{{ lookup('env', 'HOME') }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
-    recursive: yes
-    update: yes
-  tags:
-    - install
-    - zsh
+    - name: Install Oh My Zsh Plugins
+      become: false
+      block:
+        - name: Install zsh-autosuggestions
+          ansible.builtin.git:
+            repo: "https://github.com/zsh-users/zsh-autosuggestions.git"
+            dest: "{{ lookup('env', 'HOME') }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+            recursive: yes
+            update: yes
 
-- name: Install zsh-syntax-highlighting
-  ansible.builtin.git:
-    repo: "https://github.com/zsh-users/zsh-syntax-highlighting.git"
-    dest: "{{ lookup('env', 'HOME') }}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
-    recursive: yes
-    update: yes
-  tags:
-    - install
-    - zsh
+        - name: Install zsh-syntax-highlighting
+          ansible.builtin.git:
+            repo: "https://github.com/zsh-users/zsh-syntax-highlighting.git"
+            dest: "{{ lookup('env', 'HOME') }}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+            recursive: yes
+            update: yes
 
-- name: Add theme Powerlevel10k
-  ansible.builtin.git:
-    repo: "https://github.com/romkatv/powerlevel10k.git"
-    dest: "{{ lookup('env', 'HOME') }}/.oh-my-zsh/custom/themes/powerlevel10k"
-    recursive: yes
-    update: yes
-    depth: 1
-  tags:
-    - install
-    - zsh
+    - name: Add theme Powerlevel10k
+      become: false
+      ansible.builtin.git:
+        repo: "https://github.com/romkatv/powerlevel10k.git"
+        dest: "{{ lookup('env', 'HOME') }}/.oh-my-zsh/custom/themes/powerlevel10k"
+        recursive: yes
+        update: yes
+        depth: 1
