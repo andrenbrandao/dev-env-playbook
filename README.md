@@ -34,7 +34,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-play
 Run specific actions (e.g. install neovim) with a given tag.
 
 ```bash
-ansible-playbook local.yml --tags neovim --ask-become
+ansible-playbook ubuntu.yml --tags neovim --ask-become
 ```
 
 Notice the usage of `--ask-become` as the action might require the superuser password.
@@ -90,7 +90,7 @@ It will spin up a new docker container. One can now test if all the programs/app
 To run the ansible command and install all the packages, execute:
 
 ```bash
-ansible-playbook local.yml
+ansible-playbook ubuntu.yml
 ```
 
 ### Running from a installation with ansible, curl and git
