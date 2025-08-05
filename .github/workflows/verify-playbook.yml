@@ -18,10 +18,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  verify-setup:
-    name: Test Playbook on Ubuntu
+  verify-ubuntu:
+    name: Test Ubuntu Playbook
     runs-on: ubuntu-24.04
-
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -32,7 +31,6 @@ jobs:
 
       - name: Install Ansible and Dependencies
         run: |
-          # Install Ansible and other necessary tools.
           sudo apt-add-repository -y ppa:ansible/ansible
           sudo apt-get update -y
           sudo apt-get install -y curl git software-properties-common ansible
@@ -41,10 +39,10 @@ jobs:
         env:
           VAULT_PASSWORD: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
         run: |
-          echo "Executing the main playbook..."
+          echo "Executing the Ubuntu playbook..."
 
           echo "$VAULT_PASSWORD" > vault_pass.txt
-          ansible-playbook local.yml --vault-password-file vault_pass.txt
-          shred -u vault_pass.txt # remove file
+          ansible-playbook ubuntu.yml --vault-password-file vault_pass.txt
+          shred -u vault_pass.txt
 
           echo "Playbook execution finished."

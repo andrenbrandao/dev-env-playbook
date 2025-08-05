@@ -1,0 +1,9 @@
+- name: Import CLI playbook
+  ansible.builtin.import_playbook: cli.yml
+
+- name: Setup Ubuntu desktop environment
+  hosts: localhost
+  become: no
+  tasks:
+    - ansible.builtin.import_tasks: tasks/apps.yml
+    - ansible.builtin.import_tasks: tasks/gnome.yml

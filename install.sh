@@ -9,9 +9,9 @@ sudo apt-get install -y curl git software-properties-common ansible
 echo "Cloning the dev-env-playbook repository..."
 git clone https://github.com/andrenbrandao/dev-env-playbook.git /tmp/dev-env-playbook
 
-# Pull ansible and run local.yml playbook
+# Pull ansible and run cli.yml playbook
 pushd /tmp/dev-env-playbook
-echo "Running the local playbook..."
-ansible-playbook local.yml --skip-tags apps,gnome --ask-vault-pass
+echo "Running the CLI playbook..."
+ansible-playbook cli.yml --ask-vault-pass
 popd
 

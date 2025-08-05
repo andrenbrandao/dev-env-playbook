@@ -1,4 +1,5 @@
-- hosts: localhost
+- name: Setup CLI tools and config
+  hosts: localhost
   become: no
   vars:
     the_user: "{{ ansible_user_id }}"
@@ -17,9 +18,6 @@
       ansible.builtin.include_vars:
         file: infra/vault.yml
         name: vault
-      tags:
-        - install
-        - dotfiles
   tasks:
     - ansible.builtin.import_tasks: tasks/core.yml
     - ansible.builtin.import_tasks: tasks/zsh.yml
@@ -31,5 +29,3 @@
     - ansible.builtin.import_tasks: tasks/neovim.yml
     - ansible.builtin.import_tasks: tasks/productivity-tools.yml
     - ansible.builtin.import_tasks: tasks/languages.yml
-    - ansible.builtin.import_tasks: tasks/apps.yml
-    - ansible.builtin.import_tasks: tasks/gnome.yml

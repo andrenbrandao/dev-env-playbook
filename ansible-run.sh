@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-ansible-playbook local.yml
+ansible-playbook ubuntu.yml
