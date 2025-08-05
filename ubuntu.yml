@@ -4,6 +4,9 @@
 - name: Setup Ubuntu desktop environment
   hosts: localhost
   become: no
+  vars:
+    the_user: "{{ ansible_user_id }}"
+    ubuntu_version: "{{ ansible_lsb.release }}"
   tasks:
     - ansible.builtin.import_tasks: tasks/apps.yml
     - ansible.builtin.import_tasks: tasks/gnome.yml
