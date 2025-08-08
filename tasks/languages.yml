@@ -1,9 +1,31 @@
+- name: Install Python build dependencies
+  become: true
+  tags:
+    - install
+    - ubuntu
+    - languages
+    - asdf
+    - python
+  ansible.builtin.apt:
+    name:
+      - "zlib1g-dev"
+      - "libffi-dev"
+      - "libssl-dev"
+      - "libbz2-dev"
+      - "libreadline-dev"
+      - "libsqlite3-dev"
+      - "liblzma-dev"
+
 - name: Install and Configure asdf
   tags:
     - install
-    - asdf
-    - languages
     - ubuntu
+    - languages
+    - asdf
+    - python
+    - nodejs
+    - go
+    - hugo
   block:
     - name: Download asdf
       ansible.builtin.get_url:
@@ -45,9 +67,9 @@
 - name: Install Languages with asdf
   tags:
     - install
-    - asdf
-    - languages
     - ubuntu
+    - languages
+    - asdf
   block:
     - name: Install Node.js
       become: false
@@ -87,6 +109,8 @@
 
     - name: Install Hugo
       become: false
+      tags:
+        - hugo
       block:
         - name: asdf plugin-add hugo
           ansible.builtin.command: "asdf plugin add hugo https://github.com/nklmilojevic/asdf-hugo.git"
@@ -99,9 +123,9 @@
   become: false
   tags:
     - install
+    - ubuntu
     - languages
     - rust
-    - ubuntu
   block:
     - name: Download Rust and Cargo Installer
       ansible.builtin.get_url:
@@ -117,7 +141,7 @@
   become: false
   tags:
     - install
+    - ubuntu
     - languages
     - python
-    - ubuntu
   ansible.builtin.shell: sh -c "$(curl -fsSL https://astral.sh/uv/install.sh)"
