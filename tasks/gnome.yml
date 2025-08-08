@@ -27,6 +27,11 @@
         - is_gnome
         - has_display
       block:
+        - name: Install dconf-cli
+          become: true
+          ansible.builtin.apt:
+            name: dconf-cli
+            state: present
         # Needed to load Kindle in Calibre. Otherwise, it will mount automatically and Calibre won't detect it.
         - name: Load Gnome automount=false settings
           ansible.builtin.shell: dconf load /org/gnome/desktop/media-handling/ < ./gnome/media-handling.dconf
