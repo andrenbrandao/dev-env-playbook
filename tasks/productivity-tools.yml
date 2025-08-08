@@ -6,7 +6,7 @@
     - name: Install productivity packages
       become: true
       ansible.builtin.apt:
-        name: ["vim", "xclip", "tldr", "ripgrep", "fasd"]
+        name: ["vim", "tldr", "ripgrep", "fasd"]
 
     - name: Install Fzf
       become: false
@@ -21,6 +21,4 @@
         - name: Install fzf
           ansible.builtin.shell: "{{ lookup('env', 'HOME') }}/.fzf/install"
 
-    - name: Install Hack Nerd font
-      become: false
-      ansible.builtin.shell: "mkdir -p {{ lookup('env', 'HOME') }}/.local/share/fonts && cd {{ lookup('env', 'HOME') }}/.local/share/fonts && curl -fLO https://github.com/ryanoasis/nerd-fonts/raw/HEAD/patched-fonts/Hack/Regular/HackNerdFont-Regular.ttf"
+    

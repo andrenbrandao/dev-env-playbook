@@ -30,6 +30,22 @@
         scope: user
       when: ansible_service_mgr == 'systemd' and ansible_facts.virtualization_type != 'docker'
 
+- name: Install GUI-dependent packages
+  tags:
+    - install
+    - apps
+    - ubuntu
+    - guake
+  block:
+    - name: Install xclip
+      become: true
+      ansible.builtin.apt:
+        name: xclip
+
+    - name: Install Hack Nerd font
+      become: false
+      ansible.builtin.shell: "mkdir -p {{ lookup('env', 'HOME') }}/.local/share/fonts && cd {{ lookup('env', 'HOME') }}/.local/share/fonts && curl -fLO https://github.com/ryanoasis/nerd-fonts/raw/HEAD/patched-fonts/Hack/Regular/HackNerdFont-Regular.ttf"
+
 - name: Install and Configure Guake
   become: true
   tags:
