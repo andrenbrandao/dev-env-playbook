@@ -57,12 +57,18 @@
           export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
           . <(asdf completion bash)
 
+    - name: Check for .zshrc file
+      ansible.builtin.stat:
+        path: "{{ lookup('env', 'HOME') }}/.zshrc"
+      register: zshrc_stat
+
     - name: Configure asdf in .zshrc
       become: false
       ansible.builtin.blockinfile:
         path: "{{ lookup('env', 'HOME') }}/.zshrc"
         block: |
           export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+      when: zshrc_stat.stat.exists
 
 - name: Install Languages with asdf
   tags:

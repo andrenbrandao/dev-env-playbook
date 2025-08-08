@@ -4,8 +4,10 @@
     name: ["build-essential", "cmake", "gettext", "ninja-build"]
   tags:
     - install
-    - neovim
     - core
+    - python
+    - neovim
+    - always
 
 - name: Install tools (htop, etc.)
   become: true
@@ -14,3 +16,4 @@
   tags:
     - install
     - core
+    - always
