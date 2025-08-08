@@ -36,6 +36,7 @@
     - install
     - apps
     - ubuntu
+    - guake
   block:
     - name: Install Guake
       ansible.builtin.apt:
@@ -53,6 +54,7 @@
     - install
     - apps
     - ubuntu
+    - solaar
   block:
     - name: Add Solaar repository
       ansible.builtin.apt_repository:
