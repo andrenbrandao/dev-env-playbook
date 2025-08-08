@@ -24,17 +24,16 @@ if [ -z "$CATEGORY" ]; then
     exit 0
 fi
 
-# Check if dotfiles are included and prompt for vault password if needed
-if [ "$CATEGORY" = "Ubuntu" ]; then
+VAULT_PASSWORD=$(gum input --password --placeholder "Enter vault password...")
+if [ -z "$VAULT_PASSWORD" ]; then
+  gum style --foreground 212 'Vault password is required for dotfiles installation. Exiting.'
+  exit 0
+fi
 
-  VAULT_PASSWORD=$(gum input --password --placeholder "Enter vault password...")
-  if [ -n "$VAULT_PASSWORD" ]; then
-    ./ubuntu.sh "$VAULT_PASSWORD"
-  else
-    gum style --foreground 212 'Vault password is required for dotfiles installation. Exiting.'
-  fi
+if [ "$CATEGORY" = "Ubuntu" ]; then
+  ./ubuntu.sh "$VAULT_PASSWORD"
 else
-  gum style --foreground 212 'CLI installation is not implemented yet.'
+  ./install.sh "$VAULT_PASSWORD"
 fi
 
 exit 0
