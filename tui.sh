@@ -60,7 +60,7 @@ if [ "$CHOICE" = "Full Desktop Setup (Recommended for new machines)" ]; then
     ./ubuntu.sh "$VAULT_PASSWORD" "$DEV_FLAG"
 else
     SELECTED_TAGS=$(gum choose --no-limit \
-         "dotfiles" "zsh" "tmux" "neovim" "programming-languages" "github-cli" "apps" "gnome")
+         "dotfiles" "zsh" "tmux" "neovim" "programming-languages" "github-cli")
 
     if [ -z "$SELECTED_TAGS" ]; then
         echo "No components selected. Exiting."

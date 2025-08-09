@@ -2,7 +2,6 @@
   become: true
   tags:
     - install
-    - apps
     - ubuntu
     - github-cli
   block:

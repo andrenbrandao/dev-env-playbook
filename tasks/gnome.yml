@@ -4,7 +4,6 @@
     - gnome
     - ubuntu
     - calibre
-    - apps
   block:
     - name: Set fact if GNOME is the current desktop
       set_fact:
