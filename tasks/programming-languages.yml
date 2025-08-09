@@ -3,7 +3,7 @@
   tags:
     - install
     - ubuntu
-    - languages
+    - programming-languages
     - asdf
     - python
   ansible.builtin.apt:
@@ -20,7 +20,7 @@
   tags:
     - install
     - ubuntu
-    - languages
+    - programming-languages
     - asdf
     - python
     - nodejs
@@ -74,7 +74,7 @@
   tags:
     - install
     - ubuntu
-    - languages
+    - programming-languages
     - asdf
   block:
     - name: Install Node.js
@@ -130,7 +130,7 @@
   tags:
     - install
     - ubuntu
-    - languages
+    - programming-languages
     - rust
   block:
     - name: Download Rust and Cargo Installer
@@ -148,6 +148,6 @@
   tags:
     - install
     - ubuntu
-    - languages
+    - programming-languages
     - python
   ansible.builtin.shell: sh -c "$(curl -fsSL https://astral.sh/uv/install.sh)"

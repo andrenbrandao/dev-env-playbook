@@ -24,8 +24,11 @@ echo "Running the CLI playbook..."
 if [ -z "$1" ]; then
   ansible-playbook cli.yml --ask-vault-pass
 else
-  ansible-playbook cli.yml --vault-password-file <(echo "$1")
+  args=()
+  if [ -n "$2" ]; then
+    args+=(--tags "$2")
+  fi
+  ansible-playbook cli.yml --vault-password-file <(echo "$1") "${args[@]}"
 fi
 
 cd "$OLDPWD" || exit 1
-

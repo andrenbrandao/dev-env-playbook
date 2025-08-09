@@ -4,7 +4,7 @@
     - install
     - apps
     - ubuntu
-    - gh-cli
+    - github-cli
   block:
     - name: Download GitHub CLI GPG key
       ansible.builtin.get_url:
