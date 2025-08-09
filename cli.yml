@@ -3,19 +3,26 @@
   become: no
   vars:
     the_user: "{{ ansible_user_id }}"
-    ubuntu_version: "{{ ansible_lsb.release }}"
     asdf_version: "0.18.0"
     nodejs_version: "20.12.2"
     golang_version: "1.22.2"
     python_version: "3.12.5"
     hugo_version: "0.111.3"
   pre_tasks:
-    - name: Update cache
+    - name: Update apt cache for Debian
       become: true
       ansible.builtin.apt:
         update_cache: true
       tags:
         - always
+      when: ansible_os_family == "Debian"
+    - name: Update pacman cache for Archlinux
+      become: true
+      community.general.pacman:
+        update_cache: true
+      tags:
+        - always
+      when: ansible_os_family == "Archlinux"
     - name: Load Vault
       ansible.builtin.include_vars:
         file: infra/vault.yml

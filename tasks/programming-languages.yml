@@ -1,4 +1,4 @@
-- name: Install Python build dependencies
+- name: Install necessary core packages for python
   become: true
   tags:
     - install
@@ -6,15 +6,16 @@
     - programming-languages
     - asdf
     - python
-  ansible.builtin.apt:
-    name:
-      - "zlib1g-dev"
-      - "libffi-dev"
-      - "libssl-dev"
-      - "libbz2-dev"
-      - "libreadline-dev"
-      - "libsqlite3-dev"
-      - "liblzma-dev"
+  package:
+    name: "{{ item }}"
+  with_items:
+    - "{{ 'zlib1g-dev' if ansible_os_family == 'Debian' else 'zlib' }}"
+    - "{{ 'libffi-dev' if ansible_os_family == 'Debian' else 'libffi' }}"
+    - "{{ 'libssl-dev' if ansible_os_family == 'Debian' else 'openssl' }}"
+    - "{{ 'libbz2-dev' if ansible_os_family == 'Debian' else 'bzip2' }}"
+    - "{{ 'libreadline-dev' if ansible_os_family == 'Debian' else 'readline' }}"
+    - "{{ 'libsqlite3-dev' if ansible_os_family == 'Debian' else 'sqlite' }}"
+    - "{{ 'liblzma-dev' if ansible_os_family == 'Debian' else 'xz' }}"
 
 - name: Install and Configure asdf
   tags:

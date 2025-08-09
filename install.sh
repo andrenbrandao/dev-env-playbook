@@ -45,10 +45,37 @@ run_playbook() {
   fi
 }
 
-if ! command -v ansible >/dev/null; then
+install_ansible() {
   echo "Ansible not found. Installing..."
-  sudo apt-get update -y
-  sudo apt-get install -y curl git software-properties-common ansible
+
+  # --- OS Detection ---
+  if [ -f /etc/os-release ]; then
+      # shellcheck source=/dev/null
+      . /etc/os-release
+      OS_ID=$ID
+  else
+      echo "Cannot determine operating system. Exiting."
+      exit 1
+  fi
+
+  if [ "$OS_ID" != "ubuntu" ] && [ "$OS_ID" != "arch" ]; then
+      echo "This playbook is designed for Ubuntu, but you are running $OS_ID. Exiting."
+      exit 1
+  fi
+
+  if [ "$OS_ID" = "ubuntu" ]; then
+    sudo apt-get update -y
+    sudo apt-get install -y curl git software-properties-common ansible
+  fi
+
+  if [ "$OS_ID" = "arch" ]; then
+    sudo pacman -Syu --noconfirm ansible git
+  fi
+
+}
+
+if ! command -v ansible >/dev/null; then
+  install_ansible
 fi
 
 # --- Environment Execution ---

@@ -5,7 +5,7 @@
   block:
     - name: Install Stow
       become: true
-      ansible.builtin.apt:
+      ansible.builtin.package:
         name: stow
 
     - name: Clone dotfiles

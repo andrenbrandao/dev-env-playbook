@@ -13,22 +13,33 @@ if [ -f /etc/os-release ]; then
     . /etc/os-release
     OS_ID=$ID
 else
-    gum style --foreground 212 "Cannot determine operating system. Exiting."
+    echo "Cannot determine operating system. Exiting."
     exit 1
 fi
 
-if [ "$OS_ID" != "ubuntu" ]; then
-    gum style --foreground 212 "This playbook is designed for Ubuntu, but you are running $OS_ID. Exiting."
+if [ "$OS_ID" != "ubuntu" ] && [ "$OS_ID" != "arch" ]; then
+    echo "This playbook is designed for Ubuntu, but you are running $OS_ID. Exiting."
     exit 1
 fi
 
-# Ensure gum is installed
-if ! command -v gum >/dev/null; then
-    echo "Installing gum for Ubuntu..."
+install_gum() {
+  echo "Installing gum..."
+
+  if [ "$OS_ID" = "ubuntu" ]; then
     sudo mkdir -p /etc/apt/keyrings
     curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
     echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
     sudo apt update -y && sudo apt install gum -y
+  fi
+
+  if [ "$OS_ID" = "arch" ]; then
+    sudo pacman -Sy gum --noconfirm
+  fi
+}
+
+# Ensure gum is installed
+if ! command -v gum >/dev/null; then
+  install_gum
 fi
 
 gum style \

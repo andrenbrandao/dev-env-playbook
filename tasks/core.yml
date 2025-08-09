@@ -1,7 +1,13 @@
 - name: Install System Packages (build-essential, cmake, gettext, etc.)
   become: true
-  apt:
-    name: ["build-essential", "cmake", "gettext", "ninja-build"]
+  package:
+    name: "{{ item }}"
+  with_items:
+    - "{{ 'build-essential' if ansible_os_family == 'Debian' else 'base-devel' }}"
+    - cmake
+    - gettext
+    - "{{ 'ninja-build' if ansible_os_family == 'Debian' else 'ninja' }}"
+    - "{{ 'dconf-cli' if ansible_os_family == 'Debian' else 'dconf' }}"
   tags:
     - install
     - core
@@ -11,7 +17,7 @@
 
 - name: Install tools (htop, etc.)
   become: true
-  apt:
+  package:
     name: ["htop", "unzip", "busybox"]
   tags:
     - install

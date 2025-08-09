@@ -1,4 +1,4 @@
-- name: Install and Configure GitHub CLI
+- name: Install and Configure GitHub CLI for Debian
   become: true
   tags:
     - install
@@ -26,3 +26,18 @@
       ansible.builtin.apt:
         name: gh
         state: present
+  when: ansible_os_family == "Debian"
+
+- name: Install and Configure GitHub CLI for Archlinux
+  become: true
+  tags:
+    - install
+    - apps
+    - arch
+    - gh-cli
+  block:
+    - name: Install GitHub CLI
+      ansible.builtin.package:
+        name: github-cli
+        state: present
+  when: ansible_os_family == "Archlinux"
