@@ -22,6 +22,11 @@ if [ "$OS_ID" != "ubuntu" ] && [ "$OS_ID" != "arch" ]; then
     exit 1
 fi
 
+if [ "$OS_ID" == "ubuntu" ]; then
+  echo "Installing curl"
+  sudo apt-get install -y curl
+fi
+
 install_gum() {
   echo "Installing gum..."
 
@@ -64,15 +69,31 @@ request_vault_password() {
   fi
 }
 
+ubuntu_installer() {
+  if [ "$DEV_FLAG" == "--dev" ]; then
+    ./ubuntu.sh "$VAULT_PASSWORD" "$DEV_FLAG"
+  else
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/ubuntu.sh)" _ "$VAULT_PASSWORD" "$DEV_FLAG"
+  fi
+}
+
+arch_installer() {
+  if [ "$DEV_FLAG" == "--dev" ]; then
+    ./install.sh "$VAULT_PASSWORD" "$DEV_FLAG"
+  else
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/install.sh)" _ "$VAULT_PASSWORD" "$DEV_FLAG"
+  fi
+}
+
 install_full_desktop() {
   if [ "$OS_ID" == "ubuntu" ]; then
     gum confirm "This will install a complete Ubuntu desktop environment. Are you sure?" || exit 0
     request_vault_password
-    ./ubuntu.sh "$VAULT_PASSWORD" "$DEV_FLAG"
+    ubuntu_installer
   elif [ "$OS_ID" == "arch" ]; then
     gum confirm "This will install a complete Arch desktop environment. Are you sure?" || exit 0
     request_vault_password
-    ./install.sh "$VAULT_PASSWORD" "$DEV_FLAG"
+    arch_installer
   fi
 }
 
