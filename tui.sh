@@ -64,11 +64,21 @@ request_vault_password() {
   fi
 }
 
-# --- Execute based on Install Type ---
-if [ "$CHOICE" = "Full Desktop Setup (Recommended for new machines)" ]; then
+install_full_desktop() {
+  if [ "$OS_ID" == "ubuntu" ]; then
     gum confirm "This will install a complete Ubuntu desktop environment. Are you sure?" || exit 0
     request_vault_password
     ./ubuntu.sh "$VAULT_PASSWORD" "$DEV_FLAG"
+  elif [ "$OS_ID" == "arch" ]; then
+    gum confirm "This will install a complete Arch desktop environment. Are you sure?" || exit 0
+    request_vault_password
+    ./install.sh "$VAULT_PASSWORD" "$DEV_FLAG"
+  fi
+}
+
+# --- Execute based on Install Type ---
+if [ "$CHOICE" = "Full Desktop Setup (Recommended for new machines)" ]; then
+  install_full_desktop
 else
     SELECTED_TAGS=$(gum choose --no-limit \
          --selected "dotfiles,zsh,tmux,neovim,programming-languages,github-cli" \
