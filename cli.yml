@@ -14,10 +14,14 @@
       become: true
       ansible.builtin.apt:
         update_cache: true
+      tags:
+        - always
     - name: Load Vault
       ansible.builtin.include_vars:
         file: infra/vault.yml
         name: vault
+      tags:
+        - dotfiles
   tasks:
     - ansible.builtin.import_tasks: tasks/core.yml
     - ansible.builtin.import_tasks: tasks/zsh.yml
