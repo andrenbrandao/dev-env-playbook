@@ -37,7 +37,7 @@ gum style \
 	'Ubuntu Dev Env Setup' "Detected OS: $PRETTY_NAME" 'Choose your installation type.'
 
 # --- Installation Type Selection ---
-CHOICE=$(gum choose "Full Desktop Setup (Recommended for new machines)" "Custom Installation (Choose specific components)")
+CHOICE=$(gum choose "Full Desktop Setup (Recommended for new machines)" "Custom CLI Setup (For remote servers or specific tools)")
 
 if [ -z "$CHOICE" ]; then
     gum style --foreground 212 'No installation type selected. Exiting.'
