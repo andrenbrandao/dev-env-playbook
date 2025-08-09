@@ -60,39 +60,28 @@ if [ -z "$CHOICE" ]; then
     exit 0
 fi
 
-request_vault_password() {
-  # --- Vault Password ---
-  VAULT_PASSWORD=$(gum input --password --placeholder "Enter vault password...")
-  if [ -z "$VAULT_PASSWORD" ]; then
-    gum style --foreground 212 'Vault password is required. Exiting.'
-    exit 0
-  fi
-}
-
 ubuntu_installer() {
   if [ "$DEV_FLAG" == "--dev" ]; then
-    ./ubuntu.sh "$VAULT_PASSWORD" "$DEV_FLAG"
+    ./ubuntu.sh "$DEV_FLAG"
   else
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/ubuntu.sh)" _ "$VAULT_PASSWORD" "$DEV_FLAG"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/ubuntu.sh)" _ "$DEV_FLAG"
   fi
 }
 
 arch_installer() {
   if [ "$DEV_FLAG" == "--dev" ]; then
-    ./install.sh "$VAULT_PASSWORD" "$DEV_FLAG"
+    ./install.sh "$DEV_FLAG"
   else
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/install.sh)" _ "$VAULT_PASSWORD" "$DEV_FLAG"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/install.sh)" _ "$DEV_FLAG"
   fi
 }
 
 install_full_desktop() {
   if [ "$OS_ID" == "ubuntu" ]; then
     gum confirm "This will install a complete Ubuntu desktop environment. Are you sure?" || exit 0
-    request_vault_password
     ubuntu_installer
   elif [ "$OS_ID" == "arch" ]; then
     gum confirm "This will install a complete Arch desktop environment. Are you sure?" || exit 0
-    request_vault_password
     arch_installer
   fi
 }
@@ -110,14 +99,8 @@ else
         exit 0
     fi
 
-    # If "dotfiles" was selected, we need to ask for the vault password.
-    # We check for it separately to avoid issues with stdin redirection.
-    if echo "$SELECTED_TAGS" | grep -q "dotfiles"; then
-      request_vault_password
-    fi
-
     TAGS=$(echo "$SELECTED_TAGS" | tr '\n' ',' | sed 's/,$//')
-    ./install.sh "$VAULT_PASSWORD" "$TAGS" "$DEV_FLAG"
+    ./install.sh "$TAGS" "$DEV_FLAG"
 fi
 
 exit 0

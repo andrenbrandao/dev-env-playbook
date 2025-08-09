@@ -1,16 +1,15 @@
 #!/bin/bash
 
 # --- Argument Parsing ---
-VAULT_PASS=$1
-TAGS=$2
+TAGS=$1
 DEV_MODE=false
 
-# Check for --dev flag, which can be in arg 2 or 3
-if [ "$2" = "--dev" ] || [ "$3" = "--dev" ]; then
+# Check for --dev flag, which can be in arg 1 or 2
+if [ "$1" = "--dev" ] || [ "$2" = "--dev" ]; then
   DEV_MODE=true
 fi
-# If --dev was in $2, then tags are not present
-if [ "$2" = "--dev" ]; then
+# If --dev was in $1, then tags are not present
+if [ "$1" = "--dev" ]; then
   TAGS=""
 fi
 
@@ -31,17 +30,17 @@ run_playbook() {
       fi
     done
     return 1
-}
+  }
 
-  if [ -z "$VAULT_PASS" ] && contains_dotfiles; then
-    # Vault pass missing AND dotfiles tag present → ask vault pass
-    ansible-playbook cli.yml --ask-vault-pass "${args[@]}"
-  elif [ -z "$VAULT_PASS" ]; then
-    # Vault pass missing AND no dotfiles tag → just run without vault pass args
-    ansible-playbook cli.yml "${args[@]}"
+  # If no tags are selected OR 'dotfiles' tag is present,
+  # prompt for Vault password and Become password
+  if [ -z "$TAGS" ]  || contains_dotfiles; then
+    ansible-playbook cli.yml --ask-vault-pass "${args[@]}" --ask-become-pass
+
+  # If tags are present but 'dotfiles' is not among them,
+  # only prompt for Become password (no Vault password needed)
   else
-    # Vault pass provided → use vault-password-file
-    ansible-playbook cli.yml --vault-password-file <(echo "$VAULT_PASS") "${args[@]}"
+    ansible-playbook cli.yml "${args[@]}" --ask-become-pass
   fi
 }
 
