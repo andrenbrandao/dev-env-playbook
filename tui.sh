@@ -60,6 +60,7 @@ if [ "$CHOICE" = "Full Desktop Setup (Recommended for new machines)" ]; then
     ./ubuntu.sh "$VAULT_PASSWORD" "$DEV_FLAG"
 else
     SELECTED_TAGS=$(gum choose --no-limit \
+         --selected "dotfiles,zsh,tmux,neovim,programming-languages,github-cli" \
          "dotfiles" "zsh" "tmux" "neovim" "programming-languages" "github-cli")
 
     if [ -z "$SELECTED_TAGS" ]; then
@@ -67,12 +68,11 @@ else
         exit 0
     fi
 
-    while IFS= read -r tag; do
-        if [ "$tag" = "dotfiles" ]; then
-          request_vault_password
-          break
-        fi
-    done <<< "$SELECTED_TAGS"
+    # If "dotfiles" was selected, we need to ask for the vault password.
+    # We check for it separately to avoid issues with stdin redirection.
+    if echo "$SELECTED_TAGS" | grep -q "dotfiles"; then
+      request_vault_password
+    fi
 
     TAGS=$(echo "$SELECTED_TAGS" | tr '\n' ',' | sed 's/,$//')
     ./install.sh "$VAULT_PASSWORD" "$TAGS" "$DEV_FLAG"
