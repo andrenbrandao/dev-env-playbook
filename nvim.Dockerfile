@@ -14,8 +14,9 @@ RUN apt update && \
 
 FROM base AS andrebrandao
 ARG TAGS
-RUN addgroup --gid 2000 andrebrandao
-RUN adduser --gecos andrebrandao --uid 2000 --gid 2000 --disabled-password andrebrandao
+RUN deluser ubuntu
+RUN addgroup --gid 1000 andrebrandao
+RUN adduser --gecos andrebrandao --uid 1000 --gid 1000 --disabled-password andrebrandao
 RUN adduser andrebrandao sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 USER andrebrandao
