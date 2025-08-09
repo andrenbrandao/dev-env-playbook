@@ -2,6 +2,7 @@
   tags:
     - install
     - neovim
+  when: ansible_os_family == "Debian"
   block:
     - name: Clone Neovim
       ansible.builtin.git:
@@ -15,3 +16,14 @@
     - name: Install neovim
       become: true
       ansible.builtin.shell: "cd /tmp/neovim && make install"
+
+- name: Build and Install Neovim in Arch
+  tags:
+    - install
+    - neovim
+  when: ansible_os_family == "Archlinux"
+  block:
+    - name: Install neovim
+      become: true
+      ansible.builtin.package:
+        name: neovim
