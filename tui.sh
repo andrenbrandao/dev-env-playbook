@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# --- Argument Parsing ---
+DEV_FLAG=""
+if [ "$1" = "--dev" ]; then
+  DEV_FLAG="--dev"
+  echo "Running in Development Mode"
+fi
+
 # --- OS Detection ---
 if [ -f /etc/os-release ]; then
     # shellcheck source=/dev/null
@@ -37,17 +44,20 @@ if [ -z "$CHOICE" ]; then
     exit 0
 fi
 
-# --- Vault Password ---
-VAULT_PASSWORD=$(gum input --password --placeholder "Enter vault password...")
-if [ -z "$VAULT_PASSWORD" ]; then
-  gum style --foreground 212 'Vault password is required. Exiting.'
-  exit 0
-fi
+request_vault_password() {
+  # --- Vault Password ---
+  VAULT_PASSWORD=$(gum input --password --placeholder "Enter vault password...")
+  if [ -z "$VAULT_PASSWORD" ]; then
+    gum style --foreground 212 'Vault password is required. Exiting.'
+    exit 0
+  fi
+}
 
 # --- Execute based on Install Type ---
 if [ "$CHOICE" = "Full Desktop Setup (Recommended for new machines)" ]; then
     gum confirm "This will install a complete Ubuntu desktop environment. Are you sure?" || exit 0
-    ./ubuntu.sh "$VAULT_PASSWORD"
+    request_vault_password
+    ./ubuntu.sh "$VAULT_PASSWORD" "$DEV_FLAG"
 else
     SELECTED_TAGS=$(gum choose --no-limit \
          "dotfiles" "zsh" "tmux" "neovim" "programming-languages" "github-cli" "apps" "gnome")
@@ -57,8 +67,15 @@ else
         exit 0
     fi
 
+    while IFS= read -r tag; do
+        if [ "$tag" = "dotfiles" ]; then
+          request_vault_password
+          break
+        fi
+    done <<< "$SELECTED_TAGS"
+
     TAGS=$(echo "$SELECTED_TAGS" | tr '\n' ',' | sed 's/,$//')
-    ./install.sh "$VAULT_PASSWORD" "$TAGS"
+    ./install.sh "$VAULT_PASSWORD" "$TAGS" "$DEV_FLAG"
 fi
 
 exit 0
