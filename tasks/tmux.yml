@@ -15,9 +15,9 @@
         dest: "{{ lookup('env', 'HOME') }}/.tmux/plugins/tpm"
         recursive: yes
         update: yes
-      when: "'dotfiles' in ansible_run_tags"
+      when: ansible_run_tags | length == 0 or "'dotfiles' in ansible_run_tags"
 
     - name: Run tpm install scripts
       become: false
       ansible.builtin.shell: "{{ lookup('env', 'HOME') }}/.tmux/plugins/tpm/scripts/install_plugins.sh"
-      when: "'dotfiles' in ansible_run_tags"
+      when: ansible_run_tags | length == 0 or "'dotfiles' in ansible_run_tags"
