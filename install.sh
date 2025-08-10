@@ -24,7 +24,8 @@ run_playbook() {
 
   # Function to check if "dotfiles" is in TAGS
   contains_dotfiles() {
-    for tag in $TAGS; do
+    IFS=',' read -ra arr <<< "$TAGS"
+    for tag in "${arr[@]}"; do
       if [ "$tag" = "dotfiles" ]; then
         return 0
       fi

@@ -62,17 +62,17 @@ fi
 
 ubuntu_installer() {
   if [ "$DEV_FLAG" == "--dev" ]; then
-    ./ubuntu.sh "$DEV_FLAG"
+    ./ubuntu.sh "$@"
   else
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/ubuntu.sh)" _ "$DEV_FLAG"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/ubuntu.sh)" _ "$@"
   fi
 }
 
 arch_installer() {
   if [ "$DEV_FLAG" == "--dev" ]; then
-    ./install.sh "$DEV_FLAG"
+    ./install.sh "$@"
   else
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/install.sh)" _ "$DEV_FLAG"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/install.sh)" _ "$@"
   fi
 }
 
@@ -100,7 +100,12 @@ else
     fi
 
     TAGS=$(echo "$SELECTED_TAGS" | tr '\n' ',' | sed 's/,$//')
-    ./install.sh "$TAGS" "$DEV_FLAG"
+
+    if [ "$OS_ID" == "ubuntu" ]; then
+      ubuntu_installer "$TAGS" "$DEV_FLAG"
+    elif [ "$OS_ID" == "arch" ]; then
+      arch_installer "$TAGS" "$DEV_FLAG"
+    fi
 fi
 
 exit 0
