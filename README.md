@@ -15,21 +15,13 @@ Topics I have found to be most impactful from the course:
 
 ## Installation
 
-There are two options of commands:
-
-1. To install all the CLIs libraries, neovim, and dotfiles config, curl the [install.sh](./install.sh) script and run it.
+You can now use an interactive TUI (Text User Interface) installer that will guide you through the setup process step-by-step, allowing you to choose which components to install.
 
 ```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/tui.sh)"
 ```
 
-2. For a brand new Ubuntu installation, curl the [ubuntu.sh](./ubuntu.sh) script. It will install other GUI apps and backups.
-
-```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/ubuntu.sh)"
-```
-
-### Running per tags
+## Running per tags
 
 Run specific actions (e.g. install neovim) with a given tag.
 
