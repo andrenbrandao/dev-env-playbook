@@ -21,17 +21,22 @@ You can now use an interactive TUI (Text User Interface) installer that will gui
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/tui.sh)"
 ```
 
-## Running per tags
+## Development
 
-Run specific actions (e.g. install neovim) with a given tag.
+To quickly check the changes, run docker with a new ubuntu installation:
 
 ```bash
-ansible-playbook ubuntu.yml --tags neovim --ask-become
+docker run -v .:/home/andrebrandao/ansible --rm -it ubuntu-computer bash
 ```
 
-Notice the usage of `--ask-become` as the action might require the superuser password.
+Cd into the `~/ansible` directory and execute `tui.sh` with the `--dev` flag to fetch the changes from the local directory:
 
-## Running CI/CD Locally
+```bash
+cd ~/ansible
+./tui.sh --dev
+```
+
+### Running CI/CD Locally
 
 In order to verify the GH Actions are running properly before submitting the code, use https://github.com/nektos/act. See the [installation guide](https://nektosact.com/installation/gh.html) with the GitHub CLI.
 
@@ -82,7 +87,7 @@ It will spin up a new docker container. One can now test if all the programs/app
 To run the ansible command and install all the packages, execute:
 
 ```bash
-ansible-playbook ubuntu.yml
+ansible-playbook ubuntu.yml --ask-become --ask-vault-pass
 ```
 
 ### Running from a installation with ansible, curl and git
@@ -99,16 +104,9 @@ Run the new ubuntu installation:
 docker run -v .:/home/andrebrandao/ansible --rm -it ansible-computer bash
 ```
 
-Cd into the `~/ansible` directory and execute ansible:
-
-```bash
-cd ~/ansible
-./ansible-run.sh
-```
-
 ### Running from a clean ubuntu install
 
-This is the image that really simulates a clean installation, running the install.sh script.
+This is the image that really simulates a clean installation, running the tui.sh script.
 
 Build the images with:
 
@@ -122,8 +120,8 @@ Run the new ubuntu installation:
 docker run -it ubuntu-computer bash
 ```
 
-Curl the install.sh script and run it.
+Curl the tui.sh script and run it.
 
 ```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/tui.sh)"
 ```

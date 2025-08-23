@@ -3,19 +3,33 @@
     - install
     - dotfiles
   block:
+    - name: Set dotfiles_mode
+      ansible.builtin.set_fact:
+        dotfiles_mode: "{{ dotfiles_mode | default('private') }}"
+
     - name: Install Stow
       become: true
       ansible.builtin.package:
         name: stow
 
-    - name: Clone dotfiles
+    - name: Clone private dotfiles
       become: false
+      when: dotfiles_mode == 'private'
       ansible.builtin.git:
         repo: "https://{{ vault.DOTFILES_PRIVATE_PAT }}@github.com/andrenbrandao/dotfiles-private.git"
         dest: "{{ lookup('env', 'HOME') }}/dotfiles-private"
         recursive: yes
         update: yes
       no_log: true
+
+    - name: Clone public dotfiles
+      become: false
+      when: dotfiles_mode == 'public'
+      ansible.builtin.git:
+        repo: "https://github.com/andrenbrandao/dotfiles.git"
+        dest: "{{ lookup('env', 'HOME') }}/dotfiles"
+        recursive: yes
+        update: yes
 
     - name: Remove .zshrc if it exists
       become: false
@@ -43,6 +57,12 @@
         state: directory
         mode: "0775"
 
-    - name: Stow dotfiles
+    - name: Stow private dotfiles
       become: false
+      when: dotfiles_mode == 'private'
       ansible.builtin.shell: "cd {{ lookup('env', 'HOME') }}/dotfiles-private && ./install.sh"
+
+    - name: Stow public dotfiles
+      become: false
+      when: dotfiles_mode == 'public'
+      ansible.builtin.shell: "cd {{ lookup('env', 'HOME') }}/dotfiles && ./install.sh"

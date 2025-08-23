@@ -1,77 +1,79 @@
 #!/bin/bash
 
 # --- Argument Parsing ---
-TAGS=$1
+TAGS=""
 DEV_MODE=false
+DOTFILES_MODE="private"
 
-# Check for --dev flag, which can be in arg 1 or 2
-if [ "$1" = "--dev" ] || [ "$2" = "--dev" ]; then
-  DEV_MODE=true
+# Parse command-line arguments
+while [[ $# -gt 0 ]]; do
+  key="$1"
+  case $key in
+    --tags)
+      TAGS="$2"
+      shift 2
+      ;;
+    --dev)
+      DEV_MODE=true
+      shift
+      ;;
+    --dotfiles-mode)
+      DOTFILES_MODE="$2"
+      shift 2
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      exit 1
+      ;;
+  esac
+done
+
+# --- OS Detection ---
+if [ -f /etc/os-release ]; then
+    # shellcheck source=/dev/null
+    . /etc/os-release
+    OS_ID=$ID
+else
+    echo "Cannot determine operating system. Exiting."
+    exit 1
 fi
-# If --dev was in $1, then tags are not present
-if [ "$1" = "--dev" ]; then
-  TAGS=""
+
+if [ "$OS_ID" != "ubuntu" ] && [ "$OS_ID" != "arch" ]; then
+    echo "This playbook is designed for Ubuntu or Arch, but you are running $OS_ID. Exiting."
+    exit 1
 fi
 
 # --- Main Logic ---
 run_playbook() {
-  echo "Running the CLI playbook..."
+  echo "Running the playbook for $OS_ID..."
 
-  local args=()
+  local playbook_file="cli.yml"
+  if [ "$OS_ID" = "ubuntu" ]; then
+    playbook_file="ubuntu.yml"
+  fi
+
+  local args=(-e "dotfiles_mode=$DOTFILES_MODE")
   if [ -n "$TAGS" ]; then
     args+=(--tags "$TAGS")
   fi
 
-  # Function to check if "dotfiles" is in TAGS
-  contains_dotfiles() {
-    IFS=',' read -ra arr <<< "$TAGS"
-    for tag in "${arr[@]}"; do
-      if [ "$tag" = "dotfiles" ]; then
-        return 0
-      fi
-    done
-    return 1
-  }
-
-  # If no tags are selected OR 'dotfiles' tag is present,
-  # prompt for Vault password and Become password
-  if [ -z "$TAGS" ]  || contains_dotfiles; then
-    ansible-playbook cli.yml --ask-vault-pass "${args[@]}" --ask-become-pass
-
-  # If tags are present but 'dotfiles' is not among them,
-  # only prompt for Become password (no Vault password needed)
+  # If dotfiles_mode is private, we need the vault pass and sudo password.
+  if [ "$DOTFILES_MODE" = "private" ]; then
+    ansible-playbook "$playbook_file" "${args[@]}" --ask-become-pass --ask-vault-pass
   else
-    ansible-playbook cli.yml "${args[@]}" --ask-become-pass
+    # For public dotfiles, no vault pass is needed, but need sudo password.
+    ansible-playbook "$playbook_file" "${args[@]}" --ask-become-pass
   fi
 }
 
 install_ansible() {
   echo "Ansible not found. Installing..."
-
-  # --- OS Detection ---
-  if [ -f /etc/os-release ]; then
-      # shellcheck source=/dev/null
-      . /etc/os-release
-      OS_ID=$ID
-  else
-      echo "Cannot determine operating system. Exiting."
-      exit 1
-  fi
-
-  if [ "$OS_ID" != "ubuntu" ] && [ "$OS_ID" != "arch" ]; then
-      echo "This playbook is designed for Ubuntu, but you are running $OS_ID. Exiting."
-      exit 1
-  fi
-
   if [ "$OS_ID" = "ubuntu" ]; then
     sudo apt-get update -y
     sudo apt-get install -y curl git software-properties-common ansible
-  fi
-
-  if [ "$OS_ID" = "arch" ]; then
+  elif [ "$OS_ID" = "arch" ]; then
     sudo pacman -Syu --noconfirm ansible git
   fi
-
 }
 
 if ! command -v ansible >/dev/null; then

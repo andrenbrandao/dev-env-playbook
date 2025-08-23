@@ -29,6 +29,7 @@
         name: vault
       tags:
         - dotfiles
+      when: dotfiles_mode == 'private'
   tasks:
     - ansible.builtin.import_tasks: tasks/core.yml
     - ansible.builtin.import_tasks: tasks/zsh.yml

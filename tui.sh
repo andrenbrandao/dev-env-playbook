@@ -53,7 +53,7 @@ gum style \
 	'Development Environment Setup' "Detected OS: $PRETTY_NAME" 'Choose your installation type.'
 
 # --- Installation Type Selection ---
-CHOICE=$(gum choose "Full Desktop Setup (Recommended for new machines)" "Custom CLI Setup (For remote servers or specific tools)")
+CHOICE=$(gum choose "Full Desktop Setup (Recommended for new machines)" "Custom CLI Setup (For remote servers or specific tools, uses public dotfiles)")
 
 if [ -z "$CHOICE" ]; then
     gum style --foreground 212 'No installation type selected. Exiting.'
@@ -62,9 +62,9 @@ fi
 
 ubuntu_installer() {
   if [ "$DEV_FLAG" == "--dev" ]; then
-    ./ubuntu.sh "$@"
+    ./install.sh "$@"
   else
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/ubuntu.sh)" _ "$@"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/install.sh)" _ "$@"
   fi
 }
 
@@ -77,12 +77,17 @@ arch_installer() {
 }
 
 install_full_desktop() {
+  local args=("--dotfiles-mode" "private")
+  if [ "$DEV_FLAG" == "--dev" ]; then
+    args+=("--dev")
+  fi
+
   if [ "$OS_ID" == "ubuntu" ]; then
     gum confirm "This will install a complete Ubuntu desktop environment. Are you sure?" || exit 0
-    ubuntu_installer
+    ubuntu_installer "${args[@]}"
   elif [ "$OS_ID" == "arch" ]; then
     gum confirm "This will install a complete Arch desktop environment. Are you sure?" || exit 0
-    arch_installer
+    arch_installer "${args[@]}"
   fi
 }
 
@@ -100,11 +105,15 @@ else
     fi
 
     TAGS=$(echo "$SELECTED_TAGS" | tr '\n' ',' | sed 's/,$//')
+    args=("--dotfiles-mode" "public" "--tags" "$TAGS")
+    if [ "$DEV_FLAG" == "--dev" ]; then
+      args+=("--dev")
+    fi
 
     if [ "$OS_ID" == "ubuntu" ]; then
-      ubuntu_installer "$TAGS" "$DEV_FLAG"
+      ubuntu_installer "${args[@]}"
     elif [ "$OS_ID" == "arch" ]; then
-      arch_installer "$TAGS" "$DEV_FLAG"
+      arch_installer "${args[@]}"
     fi
 fi
 
