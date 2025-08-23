@@ -15,10 +15,33 @@ Topics I have found to be most impactful from the course:
 
 ## Installation
 
-You can now use an interactive TUI (Text User Interface) installer that will guide you through the setup process step-by-step, allowing you to choose which components to install.
+The recommended way to install is using the interactive TUI (Text User Interface) installer. It will guide you through the setup process and allow you to choose the installation type that best suits your needs.
 
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/tui.sh)"
+```
+
+### Installation Types
+
+The installer offers two main choices:
+
+1.  **Full Desktop Setup:** This is recommended for new personal machines. It installs a complete desktop environment and uses the **private** version of the dotfiles, which requires an Ansible Vault password to decrypt secrets.
+2.  **Custom CLI Setup:** This is ideal for remote servers or for installing specific tools. It uses the **public** version of the dotfiles and does not require a vault password. You can select which components (tags) you want to install.
+
+### Manual Installation
+
+Run the `install.sh` script directly. This is useful to bypass the TUI or automate the installation.
+
+The script accepts the following flags:
+
+- `--tags "tag1,tag2"`: A comma-separated list of Ansible tags to install (e.g., `"dotfiles,zsh,tmux"`).
+- `--dotfiles-mode "public|private"`: Choose between the public or private dotfiles. Defaults to `private`.
+- `--dev`: Run in development mode, using the local files instead of cloning the repository.
+
+**Example:**
+
+```bash
+./install.sh --tags "dotfiles,zsh,tmux" --dotfiles-mode "public"
 ```
 
 ## Development
