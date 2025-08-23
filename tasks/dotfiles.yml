@@ -45,4 +45,4 @@
 
     - name: Stow dotfiles
       become: false
-      ansible.builtin.shell: "cd {{ lookup('env', 'HOME') }}/dotfiles-private && ./stow"
+      ansible.builtin.shell: "cd {{ lookup('env', 'HOME') }}/dotfiles-private && ./install.sh"
