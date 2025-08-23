@@ -8,6 +8,7 @@
     golang_version: "1.22.2"
     python_version: "3.12.5"
     hugo_version: "0.111.3"
+    dotfiles_mode: "private"
   pre_tasks:
     - name: Update apt cache for Debian
       become: true
