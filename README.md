@@ -1,5 +1,7 @@
 # Development Environment Playbook
 
+[![Verify Ansible Playbook](https://github.com/andrenbrandao/dev-env-playbook/actions/workflows/verify-playbook.yml/badge.svg)](https://github.com/andrenbrandao/dev-env-playbook/actions/workflows/verify-playbook.yml)
+
 This repository contains my personal automation configuration for setting up a new system. Feel free to use any parts of it that you find useful, but please note that I provide no guarantees or warranties. Use the configurations at your own risk.
 
 Inspired by [ThePrimeagen's Developer Productivity Course](https://frontendmasters.com/courses/developer-productivity/) at Frontend Masters.
