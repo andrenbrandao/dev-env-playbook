@@ -2,6 +2,7 @@
   tags:
     - install
     - productivity
+    - always
   block:
     - name: Install productivity packages
       become: true
