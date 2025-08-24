@@ -38,8 +38,8 @@ else
     exit 1
 fi
 
-if [ "$OS_ID" != "ubuntu" ] && [ "$OS_ID" != "arch" ]; then
-    echo "This playbook is designed for Ubuntu or Arch, but you are running $OS_ID. Exiting."
+if [ "$OS_ID" != "ubuntu" ] && [ "$OS_ID" != "arch" ] && [ "$OS_ID" != "debian" ]; then
+    echo "This playbook is designed for Ubuntu, Arch or Debian, but you are running $OS_ID. Exiting."
     exit 1
 fi
 
@@ -48,7 +48,7 @@ run_playbook() {
   echo "Running the playbook for $OS_ID..."
 
   local playbook_file="cli.yml"
-  if [ "$OS_ID" = "ubuntu" ]; then
+  if [ "$OS_ID" = "ubuntu" ] || [ "$OS_ID" = "debian" ]; then
     playbook_file="ubuntu.yml"
   fi
 
@@ -68,7 +68,7 @@ run_playbook() {
 
 install_ansible() {
   echo "Ansible not found. Installing..."
-  if [ "$OS_ID" = "ubuntu" ]; then
+  if [ "$OS_ID" = "ubuntu" ] || [ "$OS_ID" = "debian" ]; then
     sudo apt-get update -y
     sudo apt-get install -y curl git software-properties-common ansible
   elif [ "$OS_ID" = "arch" ]; then
