@@ -53,12 +53,15 @@ gum style \
 	'Development Environment Setup' "Detected OS: $PRETTY_NAME" 'Choose your installation type.'
 
 # --- Installation Type Selection ---
+FULL_DESKTOP_CHOICE="Full Desktop Setup (Recommended for new machines)"
+CUSTOM_CLI_CHOICE="Custom CLI Setup (For remote servers or specific tools, uses public dotfiles)"
+
 if [ "$OS_ID" == "debian" ]; then
     gum style --foreground 212 'Debian detected. Only Custom CLI Setup is available.'
     echo
-    CHOICE="Custom CLI Setup (For remote servers or specific tools, uses public dotfiles)"
+    CHOICE="$CUSTOM_CLI_CHOICE"
 else
-    CHOICE=$(gum choose "Full Desktop Setup (Recommended for new machines)" "Custom CLI Setup (For remote servers or specific tools, uses public dotfiles)")
+    CHOICE=$(gum choose "$FULL_DESKTOP_CHOICE" "$CUSTOM_CLI_CHOICE")
 fi
 
 if [ -z "$CHOICE" ]; then
@@ -98,7 +101,7 @@ install_full_desktop() {
 }
 
 # --- Execute based on Install Type ---
-if [ "$CHOICE" = "Full Desktop Setup (Recommended for new machines)" ]; then
+if [ "$CHOICE" = "$FULL_DESKTOP_CHOICE" ]; then
   install_full_desktop
 else
     SELECTED_TAGS=$(gum choose --no-limit \
