@@ -22,7 +22,7 @@ Key tools:
 The recommended way to install is using the interactive TUI (Text User Interface) installer. It will guide you through the setup process and allow you to choose the installation type that best suits your needs.
 
 ```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/tui.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/tui.sh)"
 ```
 
 ### Installation Types
@@ -150,5 +150,5 @@ docker run -it ubuntu-computer bash
 Curl the tui.sh script and run it.
 
 ```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/tui.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/tui.sh)"
 ```

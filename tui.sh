@@ -75,7 +75,7 @@ ubuntu_installer() {
   if [ "$DEV_FLAG" == "--dev" ]; then
     ./install.sh "$@"
   else
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/install.sh)" _ "$@"
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/install.sh)" _ "$@"
   fi
 }
 
@@ -83,7 +83,7 @@ arch_installer() {
   if [ "$DEV_FLAG" == "--dev" ]; then
     ./install.sh "$@"
   else
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/install.sh)" _ "$@"
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/andrenbrandao/dev-env-playbook/main/install.sh)" _ "$@"
   fi
 }
 
