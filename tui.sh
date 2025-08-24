@@ -23,8 +23,10 @@ if [ "$OS_ID" != "ubuntu" ] && [ "$OS_ID" != "arch" ] && [ "$OS_ID" != "debian" 
 fi
 
 if [ "$OS_ID" == "ubuntu" ] || [ "$OS_ID" == "debian" ]; then
-  echo "Installing curl"
-  sudo apt-get install -y curl
+  if ! command -v curl >/dev/null; then
+    echo "Installing curl"
+    sudo apt-get install -y curl
+  fi
 fi
 
 install_gum() {
