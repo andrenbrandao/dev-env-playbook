@@ -15,10 +15,10 @@
     - neovim
     - always
 
-- name: Install tools (htop, etc.)
+- name: Install tools (htop, alacritty, etc.)
   become: true
   package:
-    name: ["htop", "unzip", "busybox"]
+    name: ["htop", "unzip", "busybox", "alacritty"]
   tags:
     - install
     - core
