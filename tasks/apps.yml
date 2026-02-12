@@ -187,6 +187,14 @@
       when:
         - has_display
 
+    - name: Enable DejaDup Monitor in systemd
+      ansible.builtin.systemd_service:
+        name: deja-dup-monitor.path
+        enabled: true
+        state: started
+        scope: user
+      when: ansible_service_mgr == 'systemd' and ansible_facts.virtualization_type != 'docker'
+
 - name: Install and Configure Calibre
   tags:
     - install
